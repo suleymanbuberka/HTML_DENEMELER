@@ -45,7 +45,8 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col relative overflow-hidden">
+<!-- overflow-hidden kaldırıldı, artık sayfa doğal olarak kaydırılabilir -->
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col relative">
 
     <!-- ========================================== -->
     <!-- GÖRÜNTÜLEME PENCERESİ (IFRAME MODAL) -->
@@ -71,7 +72,6 @@
         </div>
         
         <!-- İçeriğin Yükleneceği Yer (iframe) -->
-        <!-- bg-white verdik çünkü çoğu HTML sayfası beyaz arka plan varsayar -->
         <iframe id="projectFrame" class="w-full h-full bg-white border-none" src=""></iframe>
     </div>
 
@@ -100,7 +100,8 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto w-full px-4 md:px-12 py-10 overflow-y-auto">
+    <!-- overflow-y-auto kaldırıldı -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 md:px-12 py-10">
         <div class="mb-10 text-center md:text-left">
             <h2 class="text-3xl font-bold mb-2">Hoş Geldin! 👋</h2>
             <p class="text-gray-400">Projeleri önizlemek için kartlara tıkla.</p>
@@ -127,7 +128,7 @@
         // ============================================================
         // AYARLAR: LİNKLERİNİ BURAYA EKLE
         // ============================================================
-        const projects = [
+         const projects = [
             {
                 title: "Taksitli Ürün Nakit",
                 description: "Taksitle alınan ürünün, tekrar belirli bir fiyattan satıldığında elde edilecek. Kar veya zararı hesaplayabilirsiniz.",
@@ -143,20 +144,13 @@
                 color: "text-purple-400"
             },
             {
-                title: "Hesap Makinesi",
-                description: "Javascript ile yaptığım basit bir hesap makinesi uygulaması.",
-                url: "hesap-makinesi.html", 
-                icon: "fa-solid fa-calculator",
-                color: "text-green-400"
-            },
-            {
                 title: "Blog Yazılarım",
                 description: "Teknoloji ve hayat üzerine yazdığım deneme yazıları.",
                 url: "blog.html",
                 icon: "fa-solid fa-pen-nib",
                 color: "text-yellow-400"
             },
-            // Dış Link Örneği (Google gibi siteler iframe içinde açılmayabilir, yeni sekme açar)
+            // Dış Link Örneği
             {
                 title: "Google (Dış Link)",
                 description: "Dış bağlantılar güvenlik nedeniyle yeni sekmede açılır.",
@@ -182,21 +176,16 @@
 
         // Projeyi Açma Fonksiyonu
         function openProject(url, title) {
-            // Eğer link http ile başlıyorsa (dış link ise)
             if (url.startsWith('http') || url.startsWith('https')) {
-                // Google gibi siteler iframe içinde çalışmayı engeller (X-Frame-Options)
-                // Bu yüzden onları direkt yeni sekmede açıyoruz.
                 window.open(url, '_blank');
             } else {
-                // Kendi HTML dosyalarımız ise Modal içinde açıyoruz
                 viewerTitle.textContent = title;
                 frame.src = url;
                 newTabBtn.href = url;
                 
-                // Modalı Göster
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
-                document.body.style.overflow = 'hidden'; // Arka plan kaydırmayı engelle
+                document.body.style.overflow = 'hidden'; // Modal açılınca arkadaki kaydırmayı engelle
             }
         }
 
@@ -204,8 +193,8 @@
         function closeProject() {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            frame.src = ""; // İframe'i boşalt (performans için)
-            document.body.style.overflow = 'auto'; // Kaydırmayı geri aç
+            frame.src = ""; 
+            document.body.style.overflow = 'auto'; // Modal kapanınca kaydırmayı geri aç
         }
 
         function renderProjects(filterText = "") {
@@ -218,11 +207,9 @@
                     
                     visibleCount++;
                     
-                    // 'a' etiketi yerine 'div' kullanıyoruz ki tıklamayı biz yönetelim
                     const card = document.createElement('div');
                     card.className = "glass-effect p-6 rounded-2xl transition-all duration-300 card-hover group flex flex-col justify-between h-full border border-gray-800 hover:border-blue-500/30";
                     
-                    // Tıklama Olayı
                     card.onclick = () => openProject(project.url, project.title);
                     
                     card.innerHTML = `
@@ -259,7 +246,6 @@
             renderProjects(e.target.value);
         });
 
-        // ESC tuşuna basınca pencereyi kapat
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
                 closeProject();
