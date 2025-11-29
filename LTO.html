@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LTO Batarya Sunumu (YouTube Shorts Formatı)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000; /* Arka planı video için siyah yapalım */
+        }
+        .shorts-container {
+            max-width: 405px; /* 9:16 için 720p'ye yakın bir en */
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            margin: auto;
+            background-color: #f3f4f6;
+        }
+        .slide {
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            overflow: hidden; /* Animasyon taşmalarını engelle */
+        }
+        .content-to-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .content-to-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="shorts-container">
+
+        <!-- Başlık Slaytı -->
+        <section id="baslik" class="slide bg-white">
+            <div class="content-to-animate">
+                <h1 class="text-5xl font-extrabold text-blue-600 mb-4">Lityum Bataryalar</h1>
+                <p class="text-2xl text-gray-600">Voltaj Özellikleri</p>
+                <svg class="w-10 h-10 mx-auto mt-16 text-blue-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7"></path></svg>
+            </div>
+        </section>
+
+        <!-- LTO Giriş Slaytı -->
+        <section id="lto-giris" class="slide bg-white">
+             <div class="content-to-animate">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-4 border-blue-500 pb-2">Lityum Titanat (LTO)</h2>
+                <p class="text-lg leading-relaxed text-gray-700">
+                    <strong>Çok hızlı şarj olabilme</strong>, çok uzun çevrim ömrü ve geniş çalışma sıcaklığı aralığı ile öne çıkar. Enerji yoğunluğu diğer türlere göre daha düşüktür.
+                </p>
+            </div>
+        </section>
+
+        <!-- LTO Voltaj Değerleri Slaytı -->
+        <section id="lto-voltaj" class="slide bg-white">
+            <div class="content-to-animate">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">LTO Voltaj Değerleri</h2>
+                <div class="space-y-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-blue-800">Nominal Voltaj: <span class="font-bold">2.4V</span></h3>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-green-800">Maksimum Şarj: <span class="font-bold">2.85V</span></h3>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold text-red-800">Minimum Deşarj: <span class="font-bold">~1.8V</span></h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Intersection Observer for fade-in animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, {
+                threshold: 0.4
+            });
+
+            const targets = document.querySelectorAll('.content-to-animate');
+            targets.forEach(target => {
+                observer.observe(target);
+            });
+
+            // Presentation logic
+            let autoPlayStarted = false;
+            
+            function startPresentation() {
+                if (autoPlayStarted) return;
+                autoPlayStarted = true;
+
+                const container = document.querySelector('.shorts-container');
+                const slides = document.querySelectorAll('.slide');
+
+                // Zamanlamalar
+                const slide1_duration = 2000; // Başlık: 2sn
+                const slide2_duration = 6000; // Açıklama: 6sn
+                const slide3_duration = 6000; // Tablo: 6sn
+                const totalDuration = slide1_duration + slide2_duration + slide3_duration; // Toplam 14sn
+
+                container.scrollTo({ top: 0, behavior: 'smooth' });
+
+                setTimeout(() => {
+                    container.scrollTo({ top: slides[1].offsetTop, behavior: 'smooth' });
+                }, slide1_duration);
+
+                setTimeout(() => {
+                    container.scrollTo({ top: slides[2].offsetTop, behavior: 'smooth' });
+                }, slide1_duration + slide2_duration);
+
+                setTimeout(() => {
+                     container.scrollTo({ top: 0, behavior: 'smooth' });
+                     autoPlayStarted = false; // Sunum bittiğinde yeniden başlatmaya izin ver
+                }, totalDuration);
+            }
+
+            document.addEventListener('keydown', (event) => {
+                // Boşluk tuşuna basıldıysa sunumu başlat
+                if (event.code === 'Space') {
+                    event.preventDefault(); // Boşluğun sayfayı kaydırmasını engelle
+                    startPresentation();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
