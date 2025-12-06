@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İktisadi Düşünceler Tarihi - Tüm Denemeler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .solution-enter {
+            opacity: 0;
+            transform: translateY(-10px);
+            max-height: 0;
+            overflow: hidden;
+        }
+        .solution-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 500px;
+            transition: all 0.3s ease-out;
+        }
+        /* Scrollbar customization */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-indigo-700 text-white p-4 flex justify-between items-center z-20 shadow-md">
+        <h1 class="font-bold text-lg">İktisadi Düşünceler Tarihi</h1>
+        <button id="mobileMenuBtn" class="text-white focus:outline-none">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="bg-white w-full md:w-80 flex-shrink-0 border-r border-gray-200 flex flex-col transition-transform transform -translate-x-full md:translate-x-0 fixed md:relative h-full z-10 pt-16 md:pt-0">
+        <div class="p-6 border-b border-gray-100 hidden md:block">
+            <h1 class="text-xl font-bold text-indigo-700">Deneme Sınavları</h1>
+            <p class="text-sm text-gray-500 mt-1">Yüklenen 8 Dosya</p>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto p-4 space-y-2" id="examList">
+            <!-- Exam buttons will be inserted here -->
+        </nav>
+
+        <div class="p-4 border-t border-gray-200 bg-gray-50">
+            <div class="flex justify-between items-center text-sm text-gray-600 mb-2">
+                <span>Tamamlanan:</span>
+                <span id="progressText" class="font-semibold">0/0</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+        <!-- Top Bar for Exam Info -->
+        <header class="bg-white border-b border-gray-200 p-4 md:p-6 flex justify-between items-center shadow-sm z-0">
+            <div>
+                <h2 id="currentExamTitle" class="text-lg md:text-xl font-bold text-gray-800">Sınav Seçiniz</h2>
+                <p id="questionCount" class="text-sm text-gray-500 hidden">Toplam Soru: 0</p>
+            </div>
+            <div class="flex space-x-4 text-sm">
+                <div class="flex items-center text-green-600">
+                    <i class="fas fa-check-circle mr-1"></i> <span id="correctCount">0</span>
+                </div>
+                <div class="flex items-center text-red-600">
+                    <i class="fas fa-times-circle mr-1"></i> <span id="wrongCount">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Questions Area -->
+        <div id="questionsContainer" class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 pb-20">
+            <div class="text-center text-gray-500 mt-10">
+                <i class="fas fa-book-open text-4xl mb-4 text-indigo-200"></i>
+                <p>Lütfen sol menüden çözmek istediğiniz deneme sınavını seçin.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Overlay for mobile menu -->
+    <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden"></div>
+
+    <script>
+        // --- Raw Data Storage (ALL 8 FILES) ---
+        const rawData = [
+            {
+                id: 1,
+                name: "Dosya: download (3).pdf",
+                content: `1) Klasik İktisadi Düşünce hangi dönemde şekillenmiştir?
+A) Orta Çağ
+B) Aydınlanma Çağı
+C) Rönesans Dönemi
+D) Sanayi Devrimi
+E) Feodal Dönem
+Çözüm: Klasik iktisadi düşüncenin oluşmasında merkantilist ve fizyokrat düşünürlerin, dönemin siyaset bilimcilerinin, tarihçilerinin, felsefecilerinin, teologlarının ve edebiyatçılarının katkıları olmuştu. Ancak en önemli etki 1688 Kutsal İngiliz İsyanı ile 1789 Fransız İhtilali'ne kadar geçen ve Aydınlanma olarak isimlendirilen dönemdeki düşünsel gelişmelerden gelmişti. Aydınlanma dönemi genelde 1500-1650 ve 1650-1750 arasında olmak üzere iki aşamada değerlendiriliyordu. İlk dönemde astronomi, matematik ve fizik bilimlerinde yaşanan gelişmeler ikinci dönemde yaygınlık kazanarak sosyal bilimleri de kapsayacak bir düzeye gelmiştir
+Doğru cevap B şıkkıdır.
+
+2) Klasik İktisadi Düşüncenin en önemli temsilcisi kimdir?
+A) Jean-Baptiste Say
+B) Adam Smith
+C) David Ricardo
+D) Jeremy Bentham
+E) Thomas Malthus
+Çözüm: Klasik İktisadi Düşüncenin en önde gelen temsilcisi Adam Smith'tir ve onun Ulusların Zenginliği eseri bu düşüncenin temel taşıdır.
+Doğru cevap B şıkkıdır.
+
+3) Üreticilerin ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabillmeleri aşağıdaki marjinalist düşüncelerden hangisine uygundur?
+A) İktisadi sorunların kısıtlı optimizasyon ilkesi
+B) Dikkatin "marjin"deki ekonomik faaliyetlere dönmesi
+C) Öznel bir değer ve bölüşüm teorisi
+D) İkame ilkesi
+E) Metodolojik bireycilik
+Çözüm: Ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabilirler.
+Doğru cevap D şıkkıdır.
+
+4) 1. Uzak mesafeli ticaret yapılabiliyor, bağımsız tüccar sınıfı maden, kereste ve hammadde ithal ediyordu. II. Ticari koloniler oluşturulmuş ve ticaret yolların korunmasına özel bir önem verilmiştir. III. Gümüş para olarak kullanılmasa bile değişim ve değer ölçüsü aracı olarak benimsenmiştir. Yukarıdaki maddeler, hangi İlk Çağ medeniyetine ilişkin başlıca iktisadi nitelikleri ifade etmektedir?
+A) Mısır
+B) Mezopotamya
+C) İberya
+D) Adriyatik
+E) Kafkasya
+Çözüm: Mezopotamya'da uzak mesafeli ticaret yapılabiliyor, bağımsız tüccar sınıfı Suriye, Kıbrıs, Anadolu ve diğer bölgelerden maden, kereste ve hammadde ithal ediyordu. Mezopotamya'da ticari koloniler oluşturulmuş ve ticaret yolların korunmasına özel bir önem verilmiştir. Gümüş para olarak kullanılmasa bile değişim ve değer ölçüsü aracı olarak kullanılmıştır.
+Doğru cevap B şıkkıdır.
+
+5) Aşağıdakilerden hangisi Aristo'nun iktisadi düşüncelerinden biridir?
+A) Özel mülkiyete karşı çıkmıştır
+B) Ticaretin paranın asıl fonksiyonunu bozduğunu savunmuştur
+C) Para yavruladığını düşündüğünden faizi savunmuştur
+D) Üretim araçlarının mülkiyetinin devlete ait olmasını savunmuştur
+E) Köleliğe ekonomiyi olumsuz etkilediği için karşı çıkmıştır
+Çözüm: Aristo özgür düşünceyi, özel mülkiyet hakkını, liberal bir ekonomik düzeni savunmuştur. Aristo köleliği toplum için gerekli fakat zorunlu olmayan bir kurum olarak görmektedir. Aristo'nun bazı iktisadi konulardaki düşünceleri şunlardır. Para; ülkede zorunlu bir değişim aracı ve değer ölçüsüdür. Ticaret; ticari işletmelerin olumsuzluğunu savunmuştur. Aristo, ticaretin paranın asıl fonksiyonunu bozduğunu iddia etmiştir. Faiz; faiz yasaklanmalıdır. Aristo'ya göre para yavrulamaz. Bu nedenle faize karşı çıkar. Değer ve Değer Ölçüsü; kişilerin mal ve hizmetlere atfettikleri önem bu malların değerlerini belirlemektedir.
+Doğru cevap B şıkkıdır.
+
+6) Geç Protestan Geleneğin temsilcisi John Calvin'in iktisadi düşüncesine göre kurtuluşa nasıl ulaşılır?
+A) Kilisenin iktisadi politikalarına tam uyarak
+B) Meslekte uzmanlaşarak ve disiplinli olarak
+C) Lüks yaşam sürerek
+D) Hedonist tüketim anlayışına uyarak
+E) Faizden uzak durarak
+Çözüm: Geç Protestan Geleneğin en önemli temsilcisi John Calvin dir. Calvin'e göre insanlar kendi mesleklerinde uzmanlaşarak ve mesleklerinde ilerleyenler Tanrının rızasına kavuşurlar. Calvin'e göre, "Günahkar insanın" kurtuluşa erebilmesi (cennete girebilmesi) için mesleğinde uzmanlaşması, sistemli çalışması, kendini disipline etmesi, nefsini ve arzularını kontrol etmesi yeterlidir. Calvin, faiz konusuna farklı bir yaklaşım getirmiştir. Faizi ilk defa kabul eden kişidir. Bu geleneğin, günümüz kapitalist gelenekten farkı, araçsal aklın hayata hakim olmasına, hedonist (hazcılık) tüketim anlayışına, lükse, israfa, çıkarcılığa taraftar olmamasıdır. Aksine bu tür davranışların Tanrıya isyan anlamı taşıdığı düşüncesiyle karşı olmasıdır.
+Doğru cevap B şıkkıdır.
+
+7) Aşağıdakilerden hangisi reform akımının ortaya çıkardığı bazı önemli sonuçlardan biridir?
+A) Eğitimde laikleşme süreci başlamıştır
+B) Avrupa'da mezhep çatışmaları sonlanmıştır
+C) Feodalizmin güç kazanmıştır
+D) Kiliselerin mal varlığı artmıştır
+E) İncil'in Latince dışındaki dillere çevrilmesi yasaklanmıştır
+Çözüm: Reform akımının ortaya çıkardığı bazı önemli sonuçlar şunlardır: Avrupa'da yeni mezheplerin doğmasıyla mezhep çatışmaları başlamıştır, Katolik kilisesi kendini yenilemiştir, Eğitimde laikleşme süreci başlamıştır, Kiliselerin mal varlığına el konulmuştur, Avrupa'da sosyo-ekonomik gelişme için uygun bir ortam oluşmuştur.
+Doğru cevap A şıkkıdır.
+
+8) Geç Protestan Geleneği düşüncesinin en önemli temsilcisi aşağıdaki düşünürlerden hangisidir?
+A) Max Weber
+B) Martin Luther
+C) Karl Poper
+D) John Calvin
+E) Nelson Darby
+Çözüm: Bu düşüncenin en önemli temsilcisi John Calvin dir.
+Doğru cevap D şıkkıdır.
+
+9) Fransa'da en önemli Rönesans sanatçısı olarak ünlenen kişi kimdir?
+A) Martin Luther
+B) John Calvin
+C) Max Weber
+D) Piyer Lesko
+E) Albert Dürer
+Çözüm: Rönesans Avrupa'da her ülkede farklı şekilde gelişmiştir. Fransa'da Rönesansın gelişmesine krallar öncülük etmiştir. Bu ülkede Piyer Lesko en önemli Rönesans sanatçısı olarak ünlenmiştir
+Doğru cevap D şıkkıdır.
+
+10) Bir mezhep olarak ta "..." 1555 yılında resmi olarak tanınmıştır. Yukarıdaki cümlede boş bırakılan alanı aşağıdaki ifadelerden hangisi doğru olarak tamamlamaktadır?
+A) Kalvenizm Mezhebi
+B) Lutherizm Mezhepi
+C) Anglikanizm Mezhepi
+D) Reformizm Mezhepi
+E) Protestanlık Mezhebi
+Çözüm: Bir mezhep olarak ta "Protestanlık Mezhebi 1555 yılında resmi olarak tanınmıştır.
+Doğru cevap E şıkkıdır.
+
+11) Klasik iktisat düşüncesinin İngiltere'deki ilk savunucusu aşağıdakilerden hangisidir?
+A) Adam Smith
+B) Sir William Petty
+C) Alfred Marshall
+D) Jean Baptiste Say
+E) Thomas Robert Malthus
+Çözüm: Klasik iktisat İngiltere'de Sir William Petty ile başlamıştır (1623'ten 1823'e).
+Doğru cevap B şıkkıdır.
+
+12) Aşağıdakilerden hangisi 18. yüzyılda yaşamış felsefeci-iktisatçılardan birisidir?
+A) Richard Nelson
+B) Robert Barro
+C) Ducan Black
+D) John Locke
+E) Oscar Lange
+Çözüm: 18. yüzyılda yaşamış söz konusu felsefeci-iktisatçılardan bazılarını John Locke, Josiah Child, David Hume, Richard Cantillon ve Jeremy Bentham olarak belirlemek mümkündü.
+Doğru cevap D şıkkıdır.
+
+13) Aşağıdakilerden hangisi Jhon Locke'nin ifade ettiği paranın fonksiyonları doğru olarak verilmiştir?
+A) Sayma aleti - değer ölçüsü birimi - bir arzın teminatı
+B) Toplama aracı - varlık ölçüsü birimi - bir talebin temerrüdü
+C) Sayma aracı - değer ölçüsü birimi - bir talebin teminatı
+D) Sayma teçhizatı - değer toplama birimi - bir isteğin teminatı
+E) Sayma aracı - takdir ölçüsü birimi - bir tahakkukun teminatı
+Çözüm: Locke, bu siyasal görüşlerine paralel olarak para, faiz ve değer gibi konularda da düşünceler ileri sürmüştür. Locke, paranın fonksiyonlarını, sayma aracı, değer ölçüsü birimi ve bir talebin teminatı olarak ortaya koydu.
+Doğru cevap C şıkkıdır.
+
+14) Merkantilizmi siyasal amaçları gerçekleştirmek için devletin ekonomik yönden güçlü olmasını hedefleyen bir sistem olarak tanımlayan yazar aşağıdakilerden hangisidir?
+A) V. Mirabeau
+B) A. Smith
+C) G. Schmoller
+D) W. Cunningham
+E) J-B. Colbert
+Çözüm: Merkantilizmi siyasal amaçları gerçekleştirmek için devletin ekonomik yönden güçlü olmasını hedefleyen bir sistem olarak tanımlayan yazar W. Cunningham'dır.
+Doğru cevap D şıkkıdır.
+
+15) Aşağıdakilerden hangisi Malthus'un ücretlerde ilgili düşüncesini yansıtmaktadır?
+A) İnsanlar bolluk içinde yaşamaktadır.
+B) Besin kaynakları verimlilik artışı ile hızla çoğalmaktadır.
+C) Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+D) Gıda fiyatları düşmekte ortalama yaşam standardı artmaktadır.
+E) Verimsiz topraklar ile üretim maliyetleri düşmektedir.
+Çözüm: Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+Doğru cevap C şıkkıdır.
+
+16) Aşağıdakilerden hangisi klasik iktisatçıların devlet bütçesine ilişkin görüşünü ifade etmektedir?
+A) Genişletici maliye politikaları ile açık bütçe yaklaşımı
+B) Daraltıcı maliye politikaları ile açık bütçe yaklaşımı
+C) Genişletici maliye politikaları ile bütçe fazlası yaklaşımı
+D) Daraltıcı maliye politikaları ile bütçe fazlası yaklaşımı
+E) Yansız maliye politikaları ile denk bütçe yaklaşımı
+Çözüm: Klasik iktisadın denk bütçe yaklaşımı, ekonomiyi bir aile ekonomisi gibi değerlendirmiş olmalarının bir sonucuydu. Klasik iktisatçılara göre maliye politikaları yansız olmalı, yani devlet ekonomiye müdahale etmemeli, üretici ve tüketicilerin davranışları üzerinde etkili olmamalıydı.
+Doğru cevap E şıkkıdır.
+
+17) Fikirleri açısından fizyokrasi ile klasik iktisadi düşünce arasında bir yerde duran düşünür aşağıdakilerden hangisidir?
+A) Mirabeau
+B) de Nemours
+C) de Gournay
+D) la Riviere
+E) Turgot
+Çözüm: Turgot, düşünceleri ile fizyokrasi ve klasik iktisadi düşünce arasında bir yerde durur ve kimi düşünceleri fizyokrasiye, kimi düşünceleri de klasik iktisatçılara yaklaşır.
+Doğru cevap E şıkkıdır.
+
+18) Aynı üretim düzeyinde kalabilmek için firmanın bir üretim faktöründen bir birim daha az kullandığında, diğer üretim faktöründen artırması gereken miktar arasındaki orana ne ad verilmektedir?
+A) Azalan marjinal fayda
+B) Marjinal teknik ikame oranı
+C) Eş marjinal fayda
+D) Tüketici dengesi
+E) Üretici dengesi
+Çözüm: Aynı üretim düzeyinde kalabilmek için firmanın bir üretim faktöründen bir birim daha az kullandığında, diğer üretim faktöründen artırması gereken miktar arasındaki orana, marjinal teknik ikame oranı denilmektedir
+Doğru cevap B şıkkıdır.
+
+19) Avrupa sanayisinde temel girdilerin çelik, bakır ve metal alaşımlar olduğu; ulaşımda çelik demiryolları ve çelik gemilerin kullanıldığı ve taşımacılıkta elektriğin yaygınlaştığı dönem aşağıdakilerden hangisidir?
+A) 1773-1800
+B) 1800-1850
+C) 1850-1895
+D) 1895-1918
+E) 1918-1936
+Çözüm: 1895-1918 arasında sanayide ve taşımacılıkta elektrik yaygınlaşıyor, temel girdiler olarak bu sefer; çelik, bakır ve metal alaşımlar kullanılıyor, ulaşımda çelik demiryolları ve çelik gemiler; iletişimde telefon, örgütsel olarak da uzmanlaşmış profesyonel iş yönetim sistemleri, dev firmalar yaygınlaşıyordu
+Doğru cevap D şıkkıdır.
+
+20) Fizyokratların "kısır sınıf" olarak tanımladığı grup hangisidir?
+A) Tüccarlar ve zanaatkârlar
+B) Çiftçiler
+C) Devlet görevlileri
+D) Sanayiciler
+E) Askerler
+Çözüm: Fizyokratlar, tüccar ve zanaatkârları kısır sınıf olarak nitelendirirler çünkü onların üretimi tarımsal artı değere katkıda bulunmaz.
+Doğru cevap A şıkkıdır.`
+            },
+            {
+                id: 2,
+                name: "Dosya: download (2).pdf",
+                content: `1) Adam Smith'in Klasik İktisadi Düşüncesindeki temel ilkelerden biri aşağıdakilerden hangisidir?
+A) Merkezi planlama
+B) Kollektivizm
+C) Mutlak devlet kontrolü
+D) Emeğin değeri
+E) Serbest piyasa ekonomisi
+Çözüm: Adam Smith, kişisel çıkarı izlerken bireylerin topluma faydalı olmasının mekanizmasını görünmez el metaforu ile ifade etti. Görünmez el özetle, toplumdaki bireyler kendi çıkarlarının peşinde koşarken, aslında görünmez bir el aracılığıyla toplumun menfaatlerine hizmet edecektir diyordu. Adam Smith görünmez el kavramını bir kez Astronomi Tarihi isimli notlarında, bir kez Ahlaki Duygular Teorisi'nde, bir kez de Milletlerin Zenginliği isimli kitabında kullanmıştı
+Doğru cevap E şıkkıdır.
+
+2) Klasik İktisadi Düşüncenin temel felsefesi neye dayanır?
+A) Devletin ekonomiye müdahalesi
+B) Bireylerin serbest bırakılması ve piyasanın kendiliğinden dengeye gelmesi
+C) Tarımın en önemli üretim kaynağı olması
+D) Paranın değerini devletin belirlemesi
+E) Devletin sermayeye dayalı büyüme sağlaması
+Çözüm: Klasik İktisadi Düşüncenin temel felsefesi, bireylerin özgürce kendi çıkarlarını maksimize etmeye çalıştıkları bir sistem üzerine kuruludur. Bu yaklaşım, Adam Smith'in "görünmez el" kavramıyla da açıklanmıştır. Smith'e göre, bireyler kendi çıkarlarını takip ederken, aynı zamanda topluma da fayda sağlarlar. Bu bireyci ve serbest piyasa anlayışı, piyasanın kendiliğinden dengeye geleceğini savunur. Ayrıca, bu düşünce sisteminde devlet müdahalesi minimum düzeyde tutulmalı, bireyler ekonomik özgürlüklerini kullanarak kendi akıllarına göre hareket etmelidir. Ekonomide, rekabet ve rasyonalizm esas alınarak bireyler arasındaki etkileşim sonucunda üretim ve tüketim dengesi kendiliğinden oluşur.
+Doğru cevap B şıkkıdır.
+
+3) 19. y.y.'ın ortalarından itibaren Avrupa ile Kuzey Amerika genelinde sanayi şehirlerinin gelişimi aşağıdakilerden hangisi ile başlamıştır?
+A) Su gücünün kullanılmaya başlanması
+B) Elektriğin keşfi
+C) Buhar makinelerinin ortaya çıkması
+D) Arz-talep dengesinin kurulması
+E) Kırsaldan kente göç edenlerin istihdam ihtiyacı
+Çözüm: Buhar makinesinin ortaya çıkışı sayesinde endüstrinin akan suya olana bağımlılığı sona erdi ve Avrupa ile Kuzey Amerika genelinde sanayi şehirlerinin gelişimi mümkün hale geldi.
+Doğru cevap C şıkkıdır.
+
+4) Yerleşim teorisi aşağıdaki iktisatçılardan hangisine aittir?
+A) Gossen
+B) Von Thünen
+C) Cournot
+D) Adam Smith
+E) Menger
+Çözüm: Thünen'in iktisada önemli katkılarından biri de yerleşim teori teorisidir.
+Doğru cevap B şıkkıdır.
+
+5) 1. Uzak mesafeli ticaret yapılabiliyor, bağımsız tüccar sınıfı maden, kereste ve hammadde ithal ediyordu. II. Ticari koloniler oluşturulmuş ve ticaret yolların korunmasına özel bir önem verilmiştir. III. Gümüş para olarak kullanılmasa bile değişim ve değer ölçüsü aracı olarak benimsenmiştir. Yukarıdaki maddeler, hangi İlk Çağ medeniyetine ilişkin başlıca iktisadi nitelikleri ifade etmektedir?
+A) Mısır
+B) Mezopotamya
+C) İberya
+D) Adriyatik
+E) Kafkasya
+Çözüm: Mezopotamya'da uzak mesafeli ticaret yapılabiliyor, bağımsız tüccar sınıfı Suriye, Kıbrıs, Anadolu ve diğer bölgelerden maden, kereste ve hammadde ithal ediyordu. Mezopotamya'da ticari koloniler oluşturulmuş ve ticaret yolların korunmasına özel bir önem verilmiştir. Gümüş para olarak kullanılmasa bile değişim ve değer ölçüsü aracı olarak kullanılmıştır.
+Doğru cevap B şıkkıdır.
+
+6) İlk medeniyetler neden Mezopotamya ve Nil vadisinde gelişmiştir?
+A) Sosyo-ekonomik gelişmenin sağlanmasında etkili olan Aristo ve Platonun etkisi nedeniyle
+B) Nehirlerin sağladığı verimli tarım alanları ve ticaret olanakları nedeniyle
+C) Coğrafi konum avantajıyla barbar istilalarının mümkün olmaması nedeniyle
+D) Matbaa kullanımının yaygın olması nedeniyle
+E) Maden kaynaklarının çok çeşitli ve fazla olması nedeniyle
+Çözüm: Neolitik tarım yöntemleri, su baskınları yoluyla tarlaların verimli hale geldiği bazı nehir yakınlarında uygulanabiliyordu. İlk olarak tarımın yapıldığı iki yer, bu özelliklere sahip Mezopotamya ile Nil vadisi idi. Bu nehir ve vadiler doğal bir ulaşım sistemine olanak sağlıyor ve yiyecek fazlasının üretimini mümkün kıldığı için ticaretin gelişmesini sağlıyordu. Bu durumun sosyo-ekonomik gelişmeyi sağlaması nedeniyle ilk medeniyetler de Mezopotamya ve Mısır bölgesinde ortaya çıkmıştır.
+Doğru cevap B şıkkıdır.
+
+7) Aşağıdakilerden hangisi Aristo'nun iktisadi düşüncelerinden biridir?
+A) Özel mülkiyete karşı çıkmıştır
+B) Ticaretin paranın asıl fonksiyonunu bozduğunu savunmuştur
+C) Para yavruladığını düşündüğünden faizi savunmuştur
+D) Üretim araçlarının mülkiyetinin devlete ait olmasını savunmuştur
+E) Köleliğe ekonomiyi olumsuz etkilediği için karşı çıkmıştır
+Çözüm: Aristo özgür düşünceyi, özel mülkiyet hakkını, liberal bir ekonomik düzeni savunmuştur. Aristo köleliği toplum için gerekli fakat zorunlu olmayan bir kurum olarak görmektedir. Aristo'nun bazı iktisadi konulardaki düşünceleri şunlardır. Para; ülkede zorunlu bir değişim aracı ve değer ölçüsüdür. Ticaret; ticari işletmelerin olumsuzluğunu savunmuştur. Aristo, ticaretin paranın asıl fonksiyonunu bozduğunu iddia etmiştir. Faiz; faiz yasaklanmalıdır. Aristo'ya göre para yavrulamaz. Bu nedenle faize karşı çıkar. Değer ve Değer Ölçüsü; kişilerin mal ve hizmetlere atfettikleri önem bu malların değerlerini belirlemektedir.
+Doğru cevap B şıkkıdır.
+
+8) Skolastik düşünce nasıl tanımlanmaktadır?
+A) Gerçeklerin deneysel yöntemlerle bulunması
+B) Ticaretin liberal bir anlayışla yapılması
+C) İnanç ile bilginin uzlaştırılması
+D) Güzel sanatlara ilginin giderek artması
+E) Dini olarak kişinin kendini yeniden keşfetmesi ve kilisenin hakimiyetinden kurtulması
+Çözüm: Skolastik düşünce, bilgi ile inancın uzlaştırılması olarak tanımlanmaktadır. Skolastik düşünce, gerçeklere akıl yolu ile ulaşılabileceğini iddia ederek deneysel yöntemlere karşı çıkmıştır. Skolastik düşüncenin en önemli kişisi St. Thomas d'Aquin dir.
+Doğru cevap C şıkkıdır.
+
+9) Aşağıdakilerden hangisi reform akımının ortaya çıkardığı bazı önemli sonuçlardan biridir?
+A) Eğitimde laikleşme süreci başlamıştır
+B) Avrupa'da mezhep çatışmaları sonlanmıştır
+C) Feodalizmin güç kazanmıştır
+D) Kiliselerin mal varlığı artmıştır
+E) İncil'in Latince dışındaki dillere çevrilmesi yasaklanmıştır
+Çözüm: Reform akımının ortaya çıkardığı bazı önemli sonuçlar şunlardır: Avrupa'da yeni mezheplerin doğmasıyla mezhep çatışmaları başlamıştır, Katolik kilisesi kendini yenilemiştir, Eğitimde laikleşme süreci başlamıştır, Kiliselerin mal varlığına el konulmuştur, Avrupa'da sosyo-ekonomik gelişme için uygun bir ortam oluşmuştur.
+Doğru cevap A şıkkıdır.
+
+10) Tarihte bilinen en eski yasalar aşağıdaki medeniyetlerden hangisinde görülmüştür?
+A) Babiller
+B) İbraniler
+C) Hintliler
+D) Romalılar
+E) Eski Yunan
+Çözüm: Babiller'de geçerli olan kanunlar, tarihte bilinen en eski yasalardır (yaklaşık olarak M.Ö. 2200 yılları).
+Doğru cevap A şıkkıdır.
+
+11) Bir mezhep olarak ta "..." 1555 yılında resmi olarak tanınmıştır. Yukarıdaki cümlede boş bırakılan alanı aşağıdaki ifadelerden hangisi doğru olarak tamamlamaktadır?
+A) Kalvenizm Mezhebi
+B) Lutherizm Mezhepi
+C) Anglikanizm Mezhepi
+D) Reformizm Mezhepi
+E) Protestanlık Mezhebi
+Çözüm: Bir mezhep olarak ta "Protestanlık Mezhebi 1555 yılında resmi olarak tanınmıştır.
+Doğru cevap E şıkkıdır.
+
+12) Aşağıdakilerden hangisi Klasik iktisatçılardan Ricardo'nun kullandığı analiz yöntemidir?
+A) Genel denge analizi
+B) Tam denge analizi
+C) Bütüncül denge analizi
+D) Faktör denge analizi
+E) Kısmı denge analizi
+Çözüm: Ricardo bir tür kısmi denge analizi gibi bazı faktörleri sabit varsayarak analizini sürdürüyordu. İnceleme tekniği, bütün bağımsız değişkenleri analize dâhil etmesini önlüyordu.
+Doğru cevap E şıkkıdır.
+
+13) Aşağıdakilerin hangisi klasik iktisatçıların istihdam düşüncesini ifade etmektedir?
+A) Bireylerin para talebi pek çok nedenden olabilir, işlem, tasarruf, ihtiyat saikleri gibi.
+B) Fazla üretim ya da yetersiz tüketimde kriz oluşur.
+C) Ekonomi tam istihdamın altında ya da üstünde dengede olabilir.
+D) Ekonomiyi arz yönlendirir ve talep arza uyum sağlar.
+E) Piyasa fiyatları ve ücretler esnek değildir.
+Çözüm: Klasikler arz çekişli yaklaşımını benimseyerek ekonomiyi arzın yönlendirdiği ve talebin arza uyum sağladığı düşüncesindedirler. Bu nedenle üretmek, yetersiz talep sonucu ekonomide bir daralmaya neden olmayacaktır.
+Doğru cevap D şıkkıdır.
+
+14) Aşağıdakilerden hangisi klasik iktisatçıların devlet bütçesine ilişkin görüşünü ifade etmektedir?
+A) Genişletici maliye politikaları ile açık bütçe yaklaşımı
+B) Daraltıcı maliye politikaları ile açık bütçe yaklaşımı
+C) Genişletici maliye politikaları ile bütçe fazlası yaklaşımı
+D) Daraltıcı maliye politikaları ile bütçe fazlası yaklaşımı
+E) Yansız maliye politikaları ile denk bütçe yaklaşımı
+Çözüm: Klasik iktisadın denk bütçe yaklaşımı, ekonomiyi bir aile ekonomisi gibi değerlendirmiş olmalarının bir sonucuydu. Klasik iktisatçılara göre maliye politikaları yansız olmalı, yani devlet ekonomiye müdahale etmemeli, üretici ve tüketicilerin davranışları üzerinde etkili olmamalıydı.
+Doğru cevap E şıkkıdır.
+
+15) I - Millilik, II - Girişimcilik, III - Müdahalecilik, IV - Kolonyalistlik, V-Metalistlik. Merkantilist iktisadi düşüncenin genel ilkeleri aşağıdaki seçeneklerden hangisinde doğru ve tam olarak verilmiştir?
+A) I, IV ve IV
+B) II, III ve V
+C) I, III, IV ve V
+D) II, III, IV ve V
+E) I, II, III, IV ve V
+Çözüm: Girişimcilik dışında soruda verilenlerin hepsi merkantilist iktisadi düşüncenin genel ilkelerini oluşturur.
+Doğru cevap C şıkkıdır.
+
+16) Tüketicinin faydasını maksimum yapabilmesi için her bir maldan elde ettiği faydanın o malın fiyatına oranının eşitlenmesi aşağıdakilerden hangisi ile açıklanır?
+A) Marjinal ikame oranı ilkesi
+B) Azalan marjinal fayda ilkesi
+C) Eş marjinal fayda ilkesi
+D) Subjektif değer teorisi
+E) Gossen kanunları
+Çözüm: Bu eşitlik, daha sonraki katkılarla birlikte, tüketici dengesi için geçerli olan "eş marjinal fayda ilkesine" dönüşecektir.
+Doğru cevap C şıkkıdır.
+
+17) Güneş lekeleri teorisi aşağıdakilerden hangisine aittir?
+A) W. Stanley Jevons
+B) Carl Menger
+C) Leon Walras
+D) Robert Makthus
+E) Adam Smith
+Çözüm: İş çevrimleri (business cycles) iktisat teorisi ve politikası açısından önemli konulardandır. Jevons güneş lekeleri teorisi ile bu alanın ilk katkı yapanlarından biridir.
+Doğru cevap A şıkkıdır.
+
+18) Faizi; "doğal faiz" ve "piyasa faizi" olarak tanımlayan; ekonomi için ideal durumun, piyasa faizinin doğal faiz oranına eşit olması gerektiğini savunan düşünür kimdir?
+A) Knut Wicksell
+B) Böhm-Bawerk
+C) John Bates Clark
+D) David Ricardo
+E) Leon Walras
+Çözüm: Wicksell iki faiz oranından söz etmektedir. İlki doğal faiz oranıdır. Doğal faiz oranı, tasarruf arzını tasarruf talebine eşitler. Piyasa faiz oranı ise bankaların verdikleri kredilere uyguladıkları faiz oranıdır. Wicksell için ideal durum, piyasa faizinin doğal orana eşit olmasıdır.
+Doğru cevap A şıkkıdır.
+
+19) Aşağıdakilerden hangisi Marjinalizmin/Neo-klasik iktisadi düşüncenin temel ilkelerinden birisi değildir?
+A) Metodolojik bireycilik
+B) Nesnel değer
+C) İkame ilkesi
+D) Kısıtlı optimizasyon
+E) Ceteris paribus
+Çözüm: Marjinalizmin/Neo-klasik iktisadi düşüncenin temel ilkeleri şunlardır: Metodolojik bireycilik, Öznel değer (Nesnel değil), İkame ilkesidir, Kısıtlı optimizasyon, Ceteris paribus.
+Doğru cevap B şıkkıdır.
+
+20) Fizyokratların "kısır sınıf" olarak tanımladığı grup hangisidir?
+A) Tüccarlar ve zanaatkârlar
+B) Çiftçiler
+C) Devlet görevlileri
+D) Sanayiciler
+E) Askerler
+Çözüm: Fizyokratlar, tüccar ve zanaatkârları kısır sınıf olarak nitelendirirler çünkü onların üretimi tarımsal artı değere katkıda bulunmaz.
+Doğru cevap A şıkkıdır.`
+            },
+            {
+                id: 3,
+                name: "Dosya: download (1).pdf",
+                content: `1) Klasik İktisadi Düşüncenin temel felsefesi neye dayanır?
+A) Devletin ekonomiye müdahalesi
+B) Bireylerin serbest bırakılması ve piyasanın kendiliğinden dengeye gelmesi
+C) Tarımın en önemli üretim kaynağı olması
+D) Paranın değerini devletin belirlemesi
+E) Devletin sermayeye dayalı büyüme sağlaması
+Çözüm: Klasik İktisadi Düşüncenin temel felsefesi, bireylerin özgürce kendi çıkarlarını maksimize etmeye çalıştıkları bir sistem üzerine kuruludur. Bu yaklaşım, Adam Smith'in "görünmez el" kavramıyla da açıklanmıştır. Smith'e göre, bireyler kendi çıkarlarını takip ederken, aynı zamanda topluma da fayda sağlarlar. Bu bireyci ve serbest piyasa anlayışı, piyasanın kendiliğinden dengeye geleceğini savunur. Ayrıca, bu düşünce sisteminde devlet müdahalesi minimum düzeyde tutulmalı, bireyler ekonomik özgürlüklerini kullanarak kendi akıllarına göre hareket etmelidir. Ekonomide, rekabet ve rasyonalizm esas alınarak bireyler arasındaki etkileşim sonucunda üretim ve tüketim dengesi kendiliğinden oluşur.
+Doğru cevap B şıkkıdır.
+
+2) İktisatçılar bir malın değerini aşağıdakilerden hangisiyle ölçmektedir?
+A) O mala ilişkin talep oranı ile
+B) O mala ilişkin arz oranı ile
+C) Onu üretmek için gerekli emek miktarı ile
+D) Onu satabilmek için gerekli reklam ve pazarlama faaliyetleri ile
+E) O mala ilişkin ihtiyaç derecesi ile
+Çözüm: Klasik iktisatçılar bir malın değerini, onu üretmek ve piyasa arz etmek için gerekli emek miktarı ile ölçmektedir.
+Doğru cevap C şıkkıdır.
+
+3) Tüketici rantı ne demektir?
+A) Bir malın kalitesinin tüketicilere sunduğu parasal avantajlar
+B) Bir malın fiyatının tüketicilere sunduğu parasal avantajlar
+C) Bir malın üreticisinin tüketicilere sunduğu parasal avantajlar
+D) Bir malın çok bulunur olmasının tüketicilere sunduğu parasal avantajlar
+E) Bir malın üretildiği yerin tüketicilere sunduğu parasal avantajlar
+Çözüm: Bu piyasanın koşullarının getirdiği en önemli sonuçlarından birisi de "her malın tek fiyatı"nın olmasıdır ki, bu da, tüketicilere bazı parasal avantajlar sunabilmektedir. Söz konusu parasal avantajlara tüketici rantı adı verilmektedir.
+Doğru cevap B şıkkıdır.
+
+4) Tam rekabet piyasasında firmalar fiyat alıcısı oldukları için ... üretim yapmak son derece önemlidir. Boşluğu en doğru şekilde tamamlayan ifade aşağıdakilerden hangisidir?
+A) talebe göre
+B) arza göre
+C) en kısa sürede
+D) minimum maliyetle
+E) minimum hatayla
+Çözüm: Tam rekabet piyasasında firmalar fiyat alıcısı oldukları için minimum maliyetle üretim yapmak son derece önemlidir.
+Doğru cevap D şıkkıdır.
+
+5) Geç Protestan Geleneğin temsilcisi John Calvin'in iktisadi düşüncesine göre kurtuluşa nasıl ulaşılır?
+A) Kilisenin iktisadi politikalarına tam uyarak
+B) Meslekte uzmanlaşarak ve disiplinli olarak
+C) Lüks yaşam sürerek
+D) Hedonist tüketim anlayışına uyarak
+E) Faizden uzak durarak
+Çözüm: Geç Protestan Geleneğin en önemli temsilcisi John Calvin dir. Calvin'e göre insanlar kendi mesleklerinde uzmanlaşarak ve mesleklerinde ilerleyenler Tanrının rızasına kavuşurlar.
+Doğru cevap B şıkkıdır.
+
+6) Geç Protestan Geleneği düşüncesinin en önemli temsilcisi aşağıdaki düşünürlerden hangisidir?
+A) Max Weber
+B) Martin Luther
+C) Karl Poper
+D) John Calvin
+E) Nelson Darby
+Çözüm: Bu düşüncenin en önemli temsilcisi John Calvin dir.
+Doğru cevap D şıkkıdır.
+
+7) Aşağıdakilerden hangisi Roma Kilisesi Geleneğinin niteliklerinden biri değildir?
+A) Dünya rasyoneldir. Tüm dünya akılla yönetilmektedir.
+B) İnsanlar arasında farklılıklar olduğundan, birbirlerine eşit değillerdir.
+C) Doğal ve rasyonel bir yapılanmaya doğru aşamalı bir gelişme gerçekleştirilebilir.
+D) Rasyonel bir adalet sistemi gerçekleştirilmelidir.
+E) Herkesin çıkarı peşinde koşması, doğal ve doğru bir davranıştır.
+Çözüm: Bu geleneğin nitelikleri John Nelson DARBY'nin çalışmaları ışığında şu şekilde sıralanabilir. İnsanlar aynı aklı paylaştıklarından, temelde birbirlerine eşittirler. (Seçenek B yanlıştır çünkü eşit olduklarını savunur)
+Doğru cevap B şıkkıdır.
+
+8) Aşağıdakilerden hangisi 18. yüzyılda yaşamış felsefeci-iktisatçılardan birisidir?
+A) Richard Nelson
+B) Robert Barro
+C) Ducan Black
+D) John Locke
+E) Oscar Lange
+Çözüm: 18. yüzyılda yaşamış söz konusu felsefeci-iktisatçılardan bazılarını John Locke, Josiah Child, David Hume, Richard Cantillon ve Jeremy Bentham olarak belirlemek mümkündü.
+Doğru cevap D şıkkıdır.
+
+9) Uluslararası dış ticaretin işleyiş mekanizmasına ilişkin olarak düşünce geliştiren klasik iktisatçı aşağıdakilerden hangisidir?
+A) David Hume
+B) Robert Lucas
+C) Simon Kuznets
+D) James Tobin
+E) Ludwing von Mises
+Çözüm: Hume'un belki de en önemli katkısı uluslararası dış ticaretin işleyiş mekanizmasına ilişkin olarak geliştirdiği düşünceydi.
+Doğru cevap A şıkkıdır.
+
+10) I. Skolastik düşüncenin en önemli kişisi olarak kabul edilmektedir. II. Ona göre ticaretin adil olması durumunda meşru görülmesi mümkündür. III. Servet edinmeyi meşru karşılamasına rağmen insanların hiçbir şekilde servet hırsına kapılmamaları ve elde edilen serveti sosyal hizmetler amacıyla kullanmaları öğütlenmiştir. Başlıca iktisadi görüşleri yukarıda ifade edilen düşünür hangisidir?
+A) Occamlı William
+B) Thomas d'Aquin
+C) Padovalı Marcilius
+D) John Calvin
+E) Martin Luther
+Çözüm: Skolastik düşüncenin en önemli kişisi St. Thomas d'Aquin dir.
+Doğru cevap B şıkkıdır.
+
+11) Aşağıdakilerden hangisi Klasik iktisatçılardan Ricardo'nun kullandığı analiz yöntemidir?
+A) Genel denge analizi
+B) Tam denge analizi
+C) Bütüncül denge analizi
+D) Faktör denge analizi
+E) Kısmı denge analizi
+Çözüm: Ricardo bir tür kısmi denge analizi gibi bazı faktörleri sabit varsayarak analizini sürdürüyordu.
+Doğru cevap E şıkkıdır.
+
+12) Aşağıdaki seçeneklerin hangisinde klasik iktisatçı ve üretim ile ilgili düşüncesi yanlış verilmiştir?
+A) Smith: makineleşme ve iş bölümü artışı maliyetleri düşürecek ve ekonomi artan getiri yasalarına tabi olacaktır.
+B) Mill: Değer düşüncesinde arz talep yanında fayda ve maliyetin önemi yoktur.
+C) Say: ekonomik gelişme ilerleyecek ve bir gün mallar fiyatsız (serbest mal) olacaktır.
+D) Ricardo: artan toprak rantı milli gelirin büyük bir bölümünü alarak (rant teorisi) kârları azaltacaktır.
+E) Malthus: nüfus ve gıda malları arasındaki oransızlık belirli bir eşikten sonra insanlığa açlık ve sefalet getirecektir.
+Çözüm: Smith, makineleşme ve iş bölümü artışının maliyetleri düşüreceği ve ekonominin artan getiri yasalarına tabi olacağı düşüncesi ile Say ise ekonomik gelişmenin ilerleyerek bir gün malların fiyatsız (serbest mal) olacağı düşüncesi ile iyimserdiler. Mill ile ilgili verilen ifade yanlıştır.
+Doğru cevap B şıkkıdır.
+
+13) I-Tek vergi, II - Tek ordu, III - Tek kanun, IV- Tek ekonomi, V - Tek para birimi. Merkantilizm dönemindeki ulusal yapılanma sürecinde yukarıda verilenlerden hangilerine doğru bir gidiş süreci başlamıştır?
+A) I, II ve IV
+B) III, IV ve V
+C) I, II, III ve IV
+D) II, III, IV ve V
+E) I, II, III, IV ve V
+Çözüm: Belirtilen dönemde soruda verilenlerin tümüne doğru bir gidiş süreci başlamıştır.
+Doğru cevap E şıkkıdır.
+
+14) Yeni kamu görevlilerinin maaşlarının merkezden ödenmesi ve bunu için vergilerin ülke genelinden toplanması gerekliliği tarihsel olarak aşağıdaki dönemlerden hangisinde ortaya çıkmıştır?
+A) Antik Mısır
+B) Antik Yunan
+C) Antik Roma
+D) Merkantilizm
+E) Fizyokrasi
+Çözüm: Yeni kamu görevlilerinin maaşlarının merkezden ödenmesi ve bunu için vergilerin ülke genelinden toplanması gerekliliği tarihsel olarak merkantilizm döneminde ortaya çıkmıştır.
+Doğru cevap D şıkkıdır.
+
+15) Aşağıdakilerden hangisi klasik iktisatçıların devlet bütçesine ilişkin görüşünü ifade etmektedir?
+A) Genişletici maliye politikaları ile açık bütçe yaklaşımı
+B) Daraltıcı maliye politikaları ile açık bütçe yaklaşımı
+C) Genişletici maliye politikaları ile bütçe fazlası yaklaşımı
+D) Daraltıcı maliye politikaları ile bütçe fazlası yaklaşımı
+E) Yansız maliye politikaları ile denk bütçe yaklaşımı
+Çözüm: Klasik iktisadın denk bütçe yaklaşımı, ekonomiyi bir aile ekonomisi gibi değerlendirmiş olmalarının bir sonucuydu.
+Doğru cevap E şıkkıdır.
+
+16) I-Doğal düzencilik, II- Tarımcılık, III - Bölüşümcülük. Yukarıda verilenlerden, fizyokrasi düşüncesinin üzerine inşa edildiği temel ilkeler aşağıdaki seçeneklerden hangisinde doğru ve eksiksiz olarak verilmiştir?
+A) Yalnız I
+B) I ve II
+C) I ve III
+D) II ve III
+E) I, II ve III
+Çözüm: Fizyokrasi düşüncesinin üzerine inşa edildiği temel ilkeler doğal düzencilik ve tarımcılıktır.
+Doğru cevap B şıkkıdır.
+
+17) I. Matematiğin yoğun olarak kullanılması. II. İktisadi açıdan tüketicilerin rasyonaliteye uygun davrandıkları. III. Statik denge analizi. IV. Tümevarım yöntemi. Sıralananlardan hangileri Marjinalist-Neo-klasik İktisatçıların benimsedikleri yöntemler arasında sayılırlar.
+A) I, II ve IV
+B) II, III ve IV
+C) I, II ve III
+D) I, III ve IV
+E) III ve IV
+Çözüm: Marjinalist-Neo-klasik İktisatçılar matematiğin yoğun olarak kullanılmasını pekiştirirken, tümdengelim yöntemini benimserken, iktisadi açıdan tüketicilerin rasyonaliteye uygun davrandıkları bir analiz çerçevesi çizmişlerdir. Dinamik bir denge analizi yerine statik denge analizini tercih etmişlerdir.
+Doğru cevap C şıkkıdır.
+
+18) Makro temelli genel denge teorisine odaklanan düşünür aşağıdakilerden hangisidir?
+A) Böhm-Bawerk
+B) Alfred Marshall
+C) Knut Wicksell
+D) John Bates Clark
+E) Leon Walras
+Çözüm: Diğer marjinalistler mikro temelli kısmi denge analizlerine yoğunlaşırken, Walras makro temelli genel denge teorisine odaklanmıştır.
+Doğru cevap E şıkkıdır.
+
+19) Mirabeau, vergilerin hangi özelliklere sahip olması gerektiğini savunmuştur?
+A) Karmaşık ve dolaylı
+B) Basit, doğrudan ve ödeme gücünü dikkate alan
+C) Sadece tüccar ve zanaatkarlardan alınan
+D) Yüksek oranlı ve geniş kapsamlı
+E) Sadece aristokratlardan alınan
+Çözüm: Toplanan vergiler nitelik itibariyle basit, doğrudan ve ödeme gücünü dikkate alacak özellikler taşımalıydı.
+Doğru cevap B şıkkıdır.
+
+20) Her bir üretim faktörünün verimliliğinin en yüksek olduğu orana ne ad verilir?
+A) Optimal faktör bileşim oranı
+B) Maksimum faktör getirisi
+C) Marjinal faktör getirisi
+D) Emek/Sermaye oranı
+E) Çıktı/Girdi oranı
+Çözüm: Her bir üretim faktörünün verimliliğinin en yüksek olduğu orana "optimal faktör bileşim oranı"
+Doğru cevap A şıkkıdır.`
+            },
+            {
+                id: 4,
+                name: "Dosya: download.pdf",
+                content: `1) İnsanlığın ekonomik alanda gerçekleştirdiği ve gerçekleştikten sonraki nesillerin hayatlarını yüzyıllarca etkileyen iki ekonomik devrim aşağıdakilerden hangisinde doğru verilmiştir?
+A) Eğitim ve sanayi devrimi
+B) Eğitim ve tarım devrimi
+C) Askeri ve sanayi devrim
+D) Askeri ve tıbbi devrim
+E) Tarım ve sanayi devrimi
+Çözüm: İnsanlığın ekonomik alanda gerçekleştirdiği ve gerçekleştikten sonraki nesillerin hayatlarını yüzyıllarca etkileyen iki ekonomik devrim vardır: Tarım devrimi ve sanayi devrimi.
+Doğru cevap E şıkkıdır.
+
+2) Üreticilerin ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabillmeleri aşağıdaki marjinalist düşüncelerden hangisine uygundur?
+A) İktisadi sorunların kısıtlı optimizasyon ilkesi
+B) Dikkatin "marjin"deki ekonomik faaliyetlere dönmesi
+C) Öznel bir değer ve bölüşüm teorisi
+D) İkame ilkesi
+E) Metodolojik bireycilik
+Çözüm: Ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabilirler.
+Doğru cevap D şıkkıdır.
+
+3) I. Her türlü devlet müdahalesini kabul ederek, kolektivist bir düşünceyi savunmuştur. II. Üretim araçlarının mülkiyeti devlete ait olması gerektiği düşüncesini biraz daha ileri götürerek devlette her şeyin ortak olmasını savunmuştur. Başlıca iktisadi görüşleri yukarıda ifade edilen İlk Çağ düşünürü hangisidir?
+A) Platon
+B) Aristoteles
+C) Empedokles
+D) Anakismenes
+E) Demokritos
+Çözüm: Platon, her türlü devlet müdahalesini kabul ederek, Kollektivist bir düşünceyi savunmuştur. Üretim araçlarının mülkiyeti devlete aittir.
+Doğru cevap A şıkkıdır.
+
+4) Platon'un ideal devlet anlayışında yöneticilerin üretim ve parayla ilişkileri hakkında ne söylenmiştir?
+A) Para arzını belirleme yetkisi yöneticilerin olmalıdır
+B) Yöneticiler sadece tarıma yatırım yapmalıdır
+C) Yöneticilerin ticaret yapmasına izin verilmelidir
+D) Yöneticiler faiz düzeyine karışmamalıdır
+E) Yöneticiler üretim işine karışmamalıdır
+Çözüm: Platon'a göre, filozoflar devleti yönetmeli ve devleti yönetenler hiçbir zaman üretim işine karışmamalıdır.
+Doğru cevap E şıkkıdır.
+
+5) Aşağıdakilerden hangisi reform akımının ortaya çıkardığı bazı önemli sonuçlardan biridir?
+A) Eğitimde laikleşme süreci başlamıştır
+B) Avrupa'da mezhep çatışmaları sonlanmıştır
+C) Feodalizmin güç kazanmıştır
+D) Kiliselerin mal varlığı artmıştır
+E) İncil'in Latince dışındaki dillere çevrilmesi yasaklanmıştır
+Çözüm: Reform akımının ortaya çıkardığı bazı önemli sonuçlar şunlardır: Avrupa'da yeni mezheplerin doğmasıyla mezhep çatışmaları başlamıştır, Katolik kilisesi kendini yenilemiştir, Eğitimde laikleşme süreci başlamıştır, Kiliselerin mal varlığına el konulmuştur, Avrupa'da sosyo-ekonomik gelişme için uygun bir ortam oluşmuştur.
+Doğru cevap A şıkkıdır.
+
+6) Geç Protestan Geleneği düşüncesinin en önemli temsilcisi aşağıdaki düşünürlerden hangisidir?
+A) Max Weber
+B) Martin Luther
+C) Karl Poper
+D) John Calvin
+E) Nelson Darby
+Çözüm: Bu düşüncenin en önemli temsilcisi John Calvin dir.
+Doğru cevap D şıkkıdır.
+
+7) Klasik iktisat deyiminden ilk bahseden iktisatçı aşağıdakilerden hangisidir?
+A) Adam Smith
+B) Sir William Petty
+C) David Ricardo
+D) John Stuart Mill
+E) Karl Marx
+Çözüm: Klasik iktisat deyiminden ilk bahseden Marx'tır. Marx bu deyimi 1859'da yayınlanan Ekonomi Politiğin Eleştirisine Katkı isimli kitabında bahsetmiştir.
+Doğru cevap E şıkkıdır.
+
+8) Değer alanına katkı sağlayan klasik iktisatçı aşağıdakilerden hangisidir?
+A) Luc Soete
+B) Franca Malerna
+C) Jeremy Bentham
+D) Abraham Wald
+E) Robert Barro
+Çözüm: Jeremy Bentham'ın faydacı bakış açısının en önemli katkısı değer alanında oldu.
+Doğru cevap C şıkkıdır.
+
+9) I. Skolastik düşüncenin en önemli kişisi olarak kabul edilmektedir. II. Ona göre ticaretin adil olması durumunda meşru görülmesi mümkündür. III. Servet edinmeyi meşru karşılamasına rağmen insanların hiçbir şekilde servet hırsına kapılmamaları ve elde edilen serveti sosyal hizmetler amacıyla kullanmaları öğütlenmiştir. Başlıca iktisadi görüşleri yukarıda ifade edilen düşünür hangisidir?
+A) Occamlı William
+B) Thomas d'Aquin
+C) Padovalı Marcilius
+D) John Calvin
+E) Martin Luther
+Çözüm: Skolastik düşüncenin en önemli kişisi St. Thomas d'Aquin dir.
+Doğru cevap B şıkkıdır.
+
+10) Aşağıdakilerden hangisi Malthus'un ücretlerde ilgili düşüncesini yansıtmaktadır?
+A) İnsanlar bolluk içinde yaşamaktadır.
+B) Besin kaynakları verimlilik artışı ile hızla çoğalmaktadır.
+C) Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+D) Gıda fiyatları düşmekte ortalama yaşam standardı artmaktadır.
+E) Verimsiz topraklar ile üretim maliyetleri düşmektedir.
+Çözüm: Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+Doğru cevap C şıkkıdır.
+
+11) Fikirleri açısından fizyokrasi ile klasik iktisadi düşünce arasında bir yerde duran düşünür aşağıdakilerden hangisidir?
+A) Mirabeau
+B) de Nemours
+C) de Gournay
+D) la Riviere
+E) Turgot
+Çözüm: Turgot, düşünceleri ile fizyokrasi ve klasik iktisadi düşünce arasında bir yerde durur.
+Doğru cevap E şıkkıdır.
+
+12) Tüketicinin faydasını maksimum yapabilmesi için her bir maldan elde ettiği faydanın o malın fiyatına oranının eşitlenmesi aşağıdakilerden hangisi ile açıklanır?
+A) Marjinal ikame oranı ilkesi
+B) Azalan marjinal fayda ilkesi
+C) Eş marjinal fayda ilkesi
+D) Subjektif değer teorisi
+E) Gossen kanunları
+Çözüm: Tüketici dengesi için geçerli olan "eş marjinal fayda ilkesine" dönüşecektir.
+Doğru cevap C şıkkıdır.
+
+13) Menger, tüketici ihtiyaçlarını doğrudan tatmin edebilen mallara ne ad vermiştir?
+A) Alt düzey mallar
+B) Üst düzey mallar
+C) Serbest mallar
+D) Yeniden üretilmesi mümkün olmayan mallar
+E) İthal mallar
+Çözüm: Menger malları "alt düzey mallar" ve "üst düzey mallar" olarak iki ana gruba ayırır. Tüketici ihtiyaçlarını doğrudan tatmin edebilen mallar, alt düzey mallardır.
+Doğru cevap A şıkkıdır.
+
+14) Philip W. von Hornick, bir ülkenin zenginliğini artırmak için hangi stratejiyi savunmuştur?
+A) Nüfus artışının önlenmesi
+B) Değerli madenlerin ülkeden çıkarılmasının engellenmesi
+C) Faiz oranlarının artırılması
+D) Yabancı malların ülkeye ithal edilmesi
+E) Kamu harcamalarının kısıtlanması
+Çözüm: Philip W. von Hornick'e göre, hangi nedenle olursa olsun ülkeden değerli maden çıkışı engellenmeli.
+Doğru cevap B şıkkıdır.
+
+15) François Quesnay, iktisadi olayların yorumlanmasında hangi yöntemi ilk kez uygulamıştır?
+A) Tümdengelim
+B) Tümevarım
+C) Deneysel yöntem
+D) Niteliksel analiz
+E) Miktarsal analiz
+Çözüm: Quesnay ilk kez tümdengelim yöntemini iktisadi olayların yorumlanmasına uyarlamış.
+Doğru cevap A şıkkıdır.
+
+16) Fizyokratlara göre kısır sınıf hangi gruplardan oluşmaktadır?
+A) Kilise mensupları ve soylular
+B) Çiftçiler ve ormancılar
+C) Tüccarlar ve zanaatkârlar
+D) Balıkçılar ve madenciler
+E) Toprak sahipleri ve üreticiler
+Çözüm: Kısır sınıf, yani tüccarlar, zanaatkârlar ve finansmancılar.
+Doğru cevap C şıkkıdır.
+
+17) Mirabeau, vergilerin hangi özelliklere sahip olması gerektiğini savunmuştur?
+A) Karmaşık ve dolaylı
+B) Basit, doğrudan ve ödeme gücünü dikkate alan
+C) Sadece tüccar ve zanaatkarlardan alınan
+D) Yüksek oranlı ve geniş kapsamlı
+E) Sadece aristokratlardan alınan
+Çözüm: Toplanan vergiler nitelik itibariyle basit, doğrudan ve ödeme gücünü dikkate alacak özellikler taşımalıydı.
+Doğru cevap B şıkkıdır.
+
+18) Avrupa sanayisinde temel girdilerin çelik, bakır ve metal alaşımlar olduğu; ulaşımda çelik demiryolları ve çelik gemilerin kullanıldığı ve taşımacılıkta elektriğin yaygınlaştığı dönem aşağıdakilerden hangisidir?
+A) 1773-1800
+B) 1800-1850
+C) 1850-1895
+D) 1895-1918
+E) 1918-1936
+Çözüm: 1895-1918 arasında sanayide ve taşımacılıkta elektrik yaygınlaşıyor.
+Doğru cevap D şıkkıdır.
+
+19) Aşağıdakilerden hangisi Neo-klasik iktisatta faizin nasıl belirlendiğini açıklamak için kullanılmaktadır?
+A) Portföy kuramı
+B) Likidite tercihi teorisi
+C) Ödünç verilebilir fonlar teorisi
+D) Böhm-Bawerk faiz teorisi
+E) Hicks-Hansen faiz oranı teorisi
+Çözüm: Irving Fisher tarafından geliştirilen ödünç verilebilir fonlar teorisi ile açıklanmaktadır.
+Doğru cevap C şıkkıdır.
+
+20) Fizyokratlara göre devletin ekonomideki rolü nedir?
+A) Tam denetim sağlamalıdır.
+B) Müdahaleci olmalıdır.
+C) Ulusal savunma ve büyük yatırımları yönetmelidir.
+D) Vergi toplama dışında ekonomiye karışmamalıdır.
+E) Para arzını kontrol etmelidir.
+Çözüm: Fizyokratlara göre devlet, ulusal savunma, bayındırlık yatırımları ve adaletin sağlanması gibi görevleri üstlenmeli ancak ekonomiye müdahale etmemelidir.
+Doğru cevap C şıkkıdır.`
+            },
+            {
+                id: 5,
+                name: "Dosya: download (7).pdf",
+                content: `1) Klasik iktisatçılar, ekonomide hangi dengenin sağlanabileceğini savunur?
+A) Tam istihdam dengesi
+B) Eksik istihdam dengesi
+C) Sabit kur dengesi
+D) Faiz dengesi
+E) Enflasyon dengesi
+Çözüm: Bütün klasik iktisatçılar ekonominin tam istihdamda, kendiliğinden bir denge süreci içinde olduğuna iman ettiler.
+Doğru cevap A şıkkıdır.
+
+2) Jeremy Bentham'ın Klasik İktisada katkısı hangi kavram üzerine odaklanmıştır?
+A) Faydacılık
+B) Kamu yararı
+C) Emeğin karşılığı
+D) Para arzı
+E) Serbest ticaret
+Çözüm: Bentham'ın faydacı felsefesi...
+Doğru cevap A şıkkıdır.
+
+3) Üreticilerin ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabillmeleri aşağıdaki marjinalist düşüncelerden hangisine uygundur?
+A) İktisadi sorunların kısıtlı optimizasyon ilkesi
+B) Dikkatin "marjin"deki ekonomik faaliyetlere dönmesi
+C) Öznel bir değer ve bölüşüm teorisi
+D) İkame ilkesi
+E) Metodolojik bireycilik
+Çözüm: Ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabilirler.
+Doğru cevap D şıkkıdır.
+
+4) Yerleşim teorisi aşağıdaki iktisatçılardan hangisine aittir?
+A) Gossen
+B) Von Thünen
+C) Cournot
+D) Adam Smith
+E) Menger
+Çözüm: Thünen'in iktisada önemli katkılarından biri de yerleşim teori teorisidir.
+Doğru cevap B şıkkıdır.
+
+5) 1. Uzak mesafeli ticaret yapılabiliyor, bağımsız tüccar sınıfı maden, kereste ve hammadde ithal ediyordu. II. Ticari koloniler oluşturulmuş ve ticaret yolların korunmasına özel bir önem verilmiştir. III. Gümüş para olarak kullanılmasa bile değişim ve değer ölçüsü aracı olarak benimsenmiştir. Yukarıdaki maddeler, hangi İlk Çağ medeniyetine ilişkin başlıca iktisadi nitelikleri ifade etmektedir?
+A) Mısır
+B) Mezopotamya
+C) İberya
+D) Adriyatik
+E) Kafkasya
+Çözüm: Mezopotamya'da uzak mesafeli ticaret yapılabiliyor...
+Doğru cevap B şıkkıdır.
+
+6) İlk medeniyetler neden Mezopotamya ve Nil vadisinde gelişmiştir?
+A) Sosyo-ekonomik gelişmenin sağlanmasında etkili olan Aristo ve Platonun etkisi nedeniyle
+B) Nehirlerin sağladığı verimli tarım alanları ve ticaret olanakları nedeniyle
+C) Coğrafi konum avantajıyla barbar istilalarının mümkün olmaması nedeniyle
+D) Matbaa kullanımının yaygın olması nedeniyle
+E) Maden kaynaklarının çok çeşitli ve fazla olması nedeniyle
+Çözüm: Neolitik tarım yöntemleri...
+Doğru cevap B şıkkıdır.
+
+7) Aşağıdakilerden hangisi Aristo'nun iktisadi düşüncelerinden biridir?
+A) Özel mülkiyete karşı çıkmıştır
+B) Ticaretin paranın asıl fonksiyonunu bozduğunu savunmuştur
+C) Para yavruladığını düşündüğünden faizi savunmuştur
+D) Üretim araçlarının mülkiyetinin devlete ait olmasını savunmuştur
+E) Köleliğe ekonomiyi olumsuz etkilediği için karşı çıkmıştır
+Çözüm: Aristo, ticaretin paranın asıl fonksiyonunu bozduğunu iddia etmiştir.
+Doğru cevap B şıkkıdır.
+
+8) Geç Protestan Geleneği düşüncesinin en önemli temsilcisi aşağıdaki düşünürlerden hangisidir?
+A) Max Weber
+B) Martin Luther
+C) Karl Poper
+D) John Calvin
+E) Nelson Darby
+Çözüm: Bu düşüncenin en önemli temsilcisi John Calvin dir.
+Doğru cevap D şıkkıdır.
+
+9) İlk Çağ'ın kapanmasına neden olan olay aşağıdakilerden hangisidir?
+A) Babil kralı Hammurabi kanunlarının kabul edilmesi ile toplumun üç sınıfa ayrılması
+B) Yunanistan toprklarının dağınık olması sebebiyle deniz ulaşımının gelişmiş olması
+C) Platon'un her türlü devlet müdahalesini kabul ederek devlette herşeyin ortak olmasını savunması
+D) Aristo'nun özgür düşünceyi, özel mülkiyet hakkını, liberal bir ekonomik düzeni savunması
+E) Savaş ortmamı sonucunda Batı Roma İmparatorluğu'nun Cermen istilacıları tarafından yıkılması
+Çözüm: 476 yılında Batı Roma İmparatorluğu Cermen istilacıları tarafından yıkılmış.
+Doğru cevap E şıkkıdır.
+
+10) Uluslararası dış ticaretin işleyiş mekanizmasına ilişkin olarak düşünce geliştiren klasik iktisatçı aşağıdakilerden hangisidir?
+A) David Hume
+B) Robert Lucas
+C) Simon Kuznets
+D) James Tobin
+E) Ludwing von Mises
+Çözüm: Hume'un belki de en önemli katkısı uluslararası dış ticaretin işleyiş mekanizmasına ilişkin olarak geliştirdiği düşünceydi.
+Doğru cevap A şıkkıdır.
+
+11) "Görünmez el" metaforu aşağıdaki hangi iktisatçıya aittir?
+A) Amos Tversky
+B) Adam Smith
+C) Luigi Orsenigo
+D) Richard Nelson
+E) James Tobin
+Çözüm: Adam Smith.
+Doğru cevap B şıkkıdır.
+
+12) Devletin bütçe açığına başvurması ve bu açığı borçlanma veya vergi gelirleri ile finanse etmesi arasında bir fark bulunmadığı görüşü aşağıdaki klasik iktisatçıya aittir?
+A) Robert Barro
+B) Robert Lucas
+C) Simon Kuznets
+D) David Ricardo
+E) James Tobin
+Çözüm: Ricardo'ya göre, devletin bütçe açığına başvurması ve bu açığı borçlanma veya vergi gelirleri ile finanse etmesi arasında bir fark bulunmazdı.
+Doğru cevap D şıkkıdır.
+
+13) I. Ona göre para, ülkede zorunlu bir değişim aracı ve değer ölçüsüdür. II. Ticari işletmelerin olumsuzluğunu savunmuş, ticaretin paranın asıl fonksiyonunu bozduğunu iddia etmiştir. III. Değer ve değer ölçüsü, kişilerin mal ve hizmetlere atfettikleri önem bu malların değerlerini belirlemektedir. Başlıca iktisadi görüşleri yukarıda ifade edilen İlk Çağ düşünürü hangisidir?
+A) Diogenes
+B) Antishenes
+C) Sokrates
+D) Platon
+E) Aristo
+Çözüm: Aristo'nun bazı iktisadi konulardaki düşünceleri şunlardır.
+Doğru cevap E şıkkıdır.
+
+14) I- Sanayi devrimi, II - Feodalitenin çözülmeye başlaması, III - Kent ekonomilerinin canlanması, IV - Nüfus artışı. Yukarıda verilenlerden hangileri merkantalist düşüncenin yaygınlık kazanmasına yol açan faktörlerdendir?
+A) I ve II
+B) I ve III
+C) I, II ve III
+D) I, III ve IV
+E) II, III ve IV
+Çözüm: Feodalitenin çözülmeye başlaması, kent ekonomilerinin canlanması ve nüfus artışı.
+Doğru cevap E şıkkıdır.
+
+15) Aşağıdakilerden hangisi Klasik iktisatçılardan Ricardo'nun kullandığı analiz yöntemidir?
+A) Genel denge analizi
+B) Tam denge analizi
+C) Bütüncül denge analizi
+D) Faktör denge analizi
+E) Kısmı denge analizi
+Çözüm: Ricardo bir tür kısmi denge analizi gibi bazı faktörleri sabit varsayarak analizini sürdürüyordu.
+Doğru cevap E şıkkıdır.
+
+16) Aşağıdakilerden hangisi Malthus'un ücretlerde ilgili düşüncesini yansıtmaktadır?
+A) İnsanlar bolluk içinde yaşamaktadır.
+B) Besin kaynakları verimlilik artışı ile hızla çoğalmaktadır.
+C) Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+D) Gıda fiyatları düşmekte ortalama yaşam standardı artmaktadır.
+E) Verimsiz topraklar ile üretim maliyetleri düşmektedir.
+Çözüm: Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+Doğru cevap C şıkkıdır.
+
+17) I-Doğal düzencilik, II- Tarımcılık, III - Bölüşümcülük. Yukarıda verilenlerden, fizyokrasi düşüncesinin üzerine inşa edildiği temel ilkeler aşağıdaki seçeneklerden hangisinde doğru ve eksiksiz olarak verilmiştir?
+A) Yalnız I
+B) I ve II
+C) I ve III
+D) II ve III
+E) I, II ve III
+Çözüm: Fizyokrasi düşüncesinin üzerine inşa edildiği temel ilkeler doğal düzencilik ve tarımcılıktır.
+Doğru cevap B şıkkıdır.
+
+18) Güneş lekeleri teorisi aşağıdakilerden hangisine aittir?
+A) W. Stanley Jevons
+B) Carl Menger
+C) Leon Walras
+D) Robert Makthus
+E) Adam Smith
+Çözüm: Jevons güneş lekeleri teorisi.
+Doğru cevap A şıkkıdır.
+
+19) Menger, tüketici ihtiyaçlarını doğrudan tatmin edebilen mallara ne ad vermiştir?
+A) Alt düzey mallar
+B) Üst düzey mallar
+C) Serbest mallar
+D) Yeniden üretilmesi mümkün olmayan mallar
+E) İthal mallar
+Çözüm: Tüketici ihtiyaçlarını doğrudan tatmin edebilen mallar, alt düzey mallardır.
+Doğru cevap A şıkkıdır.
+
+20) Aşağıdakilerden hangisi talep esnekliğini belirleyen faktörlerden birisi değildir?
+A) Malın ikamesinin olup olmaması
+B) Zaman
+C) Yapılan harcamanın bütçedeki payı
+D) Tüketicinin geliri
+E) Mala duyulan ihtiyacın şiddetinin derecesi
+Çözüm: Tüketicinin geliri talep esnekliğini belirleyen faktörler arasında sayılmamıştır (Genelde bu soruda esneklik belirleyicileri sıralanmış ve gelir dışarıda bırakılmış).
+Doğru cevap D şıkkıdır.`
+            },
+            {
+                id: 6,
+                name: "Dosya: download (6).pdf",
+                content: `1) Aşağıdakilerden hangisi Ricardo'nun Klasik İktisat teorisine sunduğu katkılardandır?
+A) Emeğin fiyatı
+B) Emeğin maliyeti
+C) Kar dağılımı
+D) Karşılaştırmalı üstünlük teorisi
+E) İktisadi denge
+Çözüm: Klasik dış ticaret teorisi Smith ve Ricardo'nun teorileri bilinmektedir. Smith, dış ticaretin özgürce yapılabilmesini savundu ve mutlak üstünlükler teorisini geliştirdi. Ricardo ise karşılaştırmalı üstünlükler teorisini ileri sürdü. Her ikisi de dış ticarette özgürlükten yana olmalarına rağmen öz- gürlüğü isteme gerekçeleri birbirlerinden farklıydı. Mill ise Ricardo'nun dış ticaret teorisini esas alarak onu geliştirdi.
+Doğru cevap D şıkkıdır.
+
+2) Klasik İktisadi Düşüncenin temel felsefesi neye dayanır?
+A) Devletin ekonomiye müdahalesi
+B) Bireylerin serbest bırakılması ve piyasanın kendiliğinden dengeye gelmesi
+C) Tarımın en önemli üretim kaynağı olması
+D) Paranın değerini devletin belirlemesi
+E) Devletin sermayeye dayalı büyüme sağlaması
+Çözüm: Klasik İktisadi Düşüncenin temel felsefesi, bireylerin özgürce kendi çıkarlarını maksimize etmeye çalıştıkları bir sistem üzerine kuruludur.
+Doğru cevap B şıkkıdır.
+
+3) Deistlerin Tanrı inancına göre Tanrı'nın rolü aşağıdakilerden hangisinde doğru olarak verilmiştir?
+A) Tanrı dünyaya sürekli müdahale eder
+B) Tanrı insanlara her zaman rehberlik eder
+C) Tanrı bir düzen kurduktan sonra dünyaya karışmaz
+D) Tanrı toplumun kurallarını belirler
+E) Tanrı sadece dini konularda müdahale eder
+Çözüm: Deistler, Tanrı'yı yok saymıyorlar ancak onun dünyaya karışmayacağını, bir düzen tesis ettikten sonra kendi tahtında oturacağını düşünüyorlardı.
+Doğru cevap C şıkkıdır.
+
+4) 19. y.y.'ın ortalarından itibaren Avrupa ile Kuzey Amerika genelinde sanayi şehirlerinin gelişimi aşağıdakilerden hangisi ile başlamıştır?
+A) Su gücünün kullanılmaya başlanması
+B) Elektriğin keşfi
+C) Buhar makinelerinin ortaya çıkması
+D) Arz-talep dengesinin kurulması
+E) Kırsaldan kente göç edenlerin istihdam ihtiyacı
+Çözüm: Buhar makinesinin ortaya çıkışı sayesinde endüstrinin akan suya olana bağımlılığı sona erdi ve Avrupa ile Kuzey Amerika genelinde sanayi şehirlerinin gelişimi mümkün hale geldi.
+Doğru cevap C şıkkıdır.
+
+5) Aşağıdakilerden hangisi talebin fyat esnekliğini etkileyen faktörlerinden biri değildir?
+A) Söz konusu malın ikamesinin olup olmadığı
+B) Söz konusu mala ulaşmak için gerekli zaman
+C) Söz konusu harcamanın bütçedeki payı
+D) Söz konusu mala duyulan ihtiyacın şiddetinin derecesi
+E) Söz konusu malın üretim miktarı
+Çözüm: Talebin fiyat esnekliğini etkileyen faktörlerinden ilki, bu malın ikamesinin olup olmadığıdır. Talep esnekliğini etkileyen ikinci faktör zamandır. Talep esnekliğini etkileyen üçüncü unsur, söz konusu harcamanın bütçedeki payıdır. Talep esnekliğini etkileyen dördüncü faktör ise o mala duyulan ihtiyacın şiddetinin derecesidir. (Seçenek E, üretim miktarı, talep esnekliği faktörü olarak sayılmamıştır)
+Doğru cevap E şıkkıdır.
+
+6) 1. Toplumdaki iktisadi düzenleme ve düşünceler tamamen dini kaynaklı olarak düzenlenmiştir. II. Dini kaynaklarında birçok ticari düzenleme örneği bulunmaktaydı. III. Bu yasalara göre; tartı ve ölçüde hile yapılması, satılan malların başka mal ve maddelerle karıştırılarak özelliğinin bozulması, tüccarların malları mevcut fiyatın altında veya üstünde satmaları yasaklanmıştır. Yukarıdaki maddeler, hangi İlk Çağ medeniyetine ilişkin başlıca iktisadi nitelikleri ifade etmektedir?
+A) Acem
+B) Mısır
+C) Mezopotamya
+D) Çin
+E) Hindistan
+Çözüm: Hindistan toplumundaki iktisadi düzenleme ve düşünceler tamamen dini kaynaklı olarak ve kast sistemi çerçevesinde düzenlenmiştir.
+Doğru cevap E şıkkıdır.
+
+7) I. Mallar öz tüketim için üretilmekte ve kapalı aile ekonomisi içerisinde tüketilmekteydi. II. Ev ekonomisinin dışında ayrıca, bir gelir elde etmek için üretim yapılmamaktaydı. Yukarıdaki maddeler, hangi İlk Çağ medeniyetine ilişkin başlıca iktisadi nitelikleri ifade etmektedir?
+A) İnka
+B) Yunan
+C) Slav
+D) Hitit
+E) Bedevi
+Çözüm: Eski Yunanda genel olarak kapalı ev ekonomisi mevcuttur. Mallar öz tüketim için üretilmekte ve kapalı aile ekonomisi içerisinde tüketilmekteydi.
+Doğru cevap B şıkkıdır.
+
+8) Tarihte bilinen en eski yasalar aşağıdaki medeniyetlerden hangisinde görülmüştür?
+A) Babiller
+B) İbraniler
+C) Hintliler
+D) Romalılar
+E) Eski Yunan
+Çözüm: Babiller'de geçerli olan kanunlar, tarihte bilinen en eski yasalardır (yaklaşık olarak M.Ö. 2200 yılları).
+Doğru cevap A şıkkıdır.
+
+9) Aşağıdakilerden hangisi Roma Kilisesi Geleneğinin niteliklerinden biri değildir?
+A) Dünya rasyoneldir. Tüm dünya akılla yönetilmektedir.
+B) İnsanlar arasında farklılıklar olduğundan, birbirlerine eşit değillerdir.
+C) Doğal ve rasyonel bir yapılanmaya doğru aşamalı bir gelişme gerçekleştirilebilir.
+D) Rasyonel bir adalet sistemi gerçekleştirilmelidir.
+E) Herkesin çıkarı peşinde koşması, doğal ve doğru bir davranıştır.
+Çözüm: İnsanlar aynı aklı paylaştıklarından, temelde birbirlerine eşittirler. (B şıkkı yanlıştır)
+Doğru cevap B şıkkıdır.
+
+10) Bir mezhep olarak ta "..." 1555 yılında resmi olarak tanınmıştır. Yukarıdaki cümlede boş bırakılan alanı aşağıdaki ifadelerden hangisi doğru olarak tamamlamaktadır?
+A) Kalvenizm Mezhebi
+B) Lutherizm Mezhepi
+C) Anglikanizm Mezhepi
+D) Reformizm Mezhepi
+E) Protestanlık Mezhebi
+Çözüm: Bir mezhep olarak ta "Protestanlık Mezhebi 1555 yılında resmi olarak tanınmıştır.
+Doğru cevap E şıkkıdır.
+
+11) Klasik iktisat deyiminden ilk bahseden iktisatçı aşağıdakilerden hangisidir?
+A) Adam Smith
+B) Sir William Petty
+C) David Ricardo
+D) John Stuart Mill
+E) Karl Marx
+Çözüm: Klasik iktisat deyiminden ilk bahseden Marx'tır.
+Doğru cevap E şıkkıdır.
+
+12) Devletin bütçe açığına başvurması ve bu açığı borçlanma veya vergi gelirleri ile finanse etmesi arasında bir fark bulunmadığı görüşü aşağıdaki klasik iktisatçıya aittir?
+A) Robert Barro
+B) Robert Lucas
+C) Simon Kuznets
+D) David Ricardo
+E) James Tobin
+Çözüm: Ricardo'ya göre, devletin bütçe açığına başvurması ve bu açığı borçlanma veya vergi gelirleri ile finanse etmesi arasında bir fark bulunmazdı.
+Doğru cevap D şıkkıdır.
+
+13) Aşağıdakilerden hangisi Jhon Locke'nin ifade ettiği paranın fonksiyonları doğru olarak verilmiştir?
+A) Sayma aleti - değer ölçüsü birimi - bir arzın teminatı
+B) Toplama aracı - varlık ölçüsü birimi - bir talebin temerrüdü
+C) Sayma aracı - değer ölçüsü birimi - bir talebin teminatı
+D) Sayma teçhizatı - değer toplama birimi - bir isteğin teminatı
+E) Sayma aracı - takdir ölçüsü birimi - bir tahakkukun teminatı
+Çözüm: Locke, paranın fonksiyonlarını, sayma aracı, değer ölçüsü birimi ve bir talebin teminatı olarak ortaya koydu.
+Doğru cevap C şıkkıdır.
+
+14) Yeni kamu görevlilerinin maaşlarının merkezden ödenmesi ve bunu için vergilerin ülke genelinden toplanması gerekliliği tarihsel olarak aşağıdaki dönemlerden hangisinde ortaya çıkmıştır?
+A) Antik Mısır
+B) Antik Yunan
+C) Antik Roma
+D) Merkantilizm
+E) Fizyokrasi
+Çözüm: Yeni kamu görevlilerinin maaşlarının merkezden ödenmesi ve bunu için vergilerin ülke genelinden toplanması gerekliliği tarihsel olarak merkantilizm döneminde ortaya çıkmıştır.
+Doğru cevap D şıkkıdır.
+
+15) Aşağıdakilerden hangisi klasik iktisatçıların devlet bütçesine ilişkin görüşünü ifade etmektedir?
+A) Genişletici maliye politikaları ile açık bütçe yaklaşımı
+B) Daraltıcı maliye politikaları ile açık bütçe yaklaşımı
+C) Genişletici maliye politikaları ile bütçe fazlası yaklaşımı
+D) Daraltıcı maliye politikaları ile bütçe fazlası yaklaşımı
+E) Yansız maliye politikaları ile denk bütçe yaklaşımı
+Çözüm: Klasik iktisadın denk bütçe yaklaşımı...
+Doğru cevap E şıkkıdır.
+
+16) Tüketicinin faydasını maksimum yapabilmesi için her bir maldan elde ettiği faydanın o malın fiyatına oranının eşitlenmesi aşağıdakilerden hangisi ile açıklanır?
+A) Marjinal ikame oranı ilkesi
+B) Azalan marjinal fayda ilkesi
+C) Eş marjinal fayda ilkesi
+D) Subjektif değer teorisi
+E) Gossen kanunları
+Çözüm: Tüketici dengesi için geçerli olan "eş marjinal fayda ilkesine" dönüşecektir.
+Doğru cevap C şıkkıdır.
+
+17) Turgot'a göre faiz oranları hangi faktörlere bağlıdır?
+A) Hükümet politikaları
+B) Dış ticaret dengesi
+C) Tarımsal üretim verimliliği
+D) Piyasa talebi
+E) Borç vermek ve almak isteyenlerin istekleri
+Çözüm: Turgot'a göre faiz oranları, borç vermek ve borç almak isteyenlerin isteklerine ve borç vermek isteyenlerin ellerinde bu amaçla tuttukları fonların büyüklüğüne bağlıdır.
+Doğru cevap E şıkkıdır.
+
+18) Avrupa sanayisinde 1780-1848 arasındaki dönem için aşağıdakilerden hangisi söylenemez?
+A) Sanayide makineler su gücü ile kullanılmaktadır
+B) Temel girdiler olarak; pamuk, demir ve kömür kullanılmaktadır
+C) Ulaşım altyapısına demiryolları hakimdir
+D) İletişimde posta arabaları ön plandadır
+E) Örgütsel olarak fabrikalar hakimdir
+Çözüm: 1780-1848 arasında ulaşım altyapısına kanallar, yelkenli gemiler hakimdir (demiryolları değil).
+Doğru cevap C şıkkıdır.
+
+19) I. W. Stanley Jevons, II. Carl Menger, III. Leon Walras, IV. Knut Wicksell. Yukarıdakilerden hangileri 1. kuşak marjinalistlerdendir?
+A) I,II
+B) I,III
+C) I,II,III
+D) I,II,IV
+E) I,II,III,IV
+Çözüm: 1. kuşak marjinalistler: W. Stanley Jevons, Carl Menger, Leon Walras'dır.
+Doğru cevap C şıkkıdır.
+
+20) Merkantilist düşüncenin üç alt döneminden biri olan 'bullionism dönemi hangi özelliği ile bilinir?
+A) Dış ticaretin teşvik edilmesi
+B) Sanayi üretiminin artırılması
+C) Değerli maden biriktirme odaklı olması
+D) Kolonileşme sürecinin başlaması
+E) Vergilerin düşürülmesi
+Çözüm: 'Bullionism' dönemi, merkantilist düşüncenin ilk aşamalarında değerli madenlerin biriktirilmesine yoğunlaşan bir dönemdir.
+Doğru cevap C şıkkıdır.`
+            },
+            {
+                id: 7,
+                name: "Dosya: download (5).pdf",
+                content: `1) İnsanlığın ekonomik alanda gerçekleştirdiği ve gerçekleştikten sonraki nesillerin hayatlarını yüzyıllarca etkileyen iki ekonomik devrim aşağıdakilerden hangisinde doğru verilmiştir?
+A) Eğitim ve sanayi devrimi
+B) Eğitim ve tarım devrimi
+C) Askeri ve sanayi devrim
+D) Askeri ve tıbbi devrim
+E) Tarım ve sanayi devrimi
+Çözüm: İnsanlığın ekonomik alanda gerçekleştirdiği ve gerçekleştikten sonraki nesillerin hayatlarını yüzyıllarca etkileyen iki ekonomik devrim vardır: Tarım devrimi ve sanayi devrimi.
+Doğru cevap E şıkkıdır.
+
+2) Üreticilerin ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabillmeleri aşağıdaki marjinalist düşüncelerden hangisine uygundur?
+A) İktisadi sorunların kısıtlı optimizasyon ilkesi
+B) Dikkatin "marjin"deki ekonomik faaliyetlere dönmesi
+C) Öznel bir değer ve bölüşüm teorisi
+D) İkame ilkesi
+E) Metodolojik bireycilik
+Çözüm: Ücretler artarsa kullandıkları emek miktarını azaltarak sermaye miktarını artırabilirler.
+Doğru cevap D şıkkıdır.
+
+3) I. Her türlü devlet müdahalesini kabul ederek, kolektivist bir düşünceyi savunmuştur. II. Üretim araçlarının mülkiyeti devlete ait olması gerektiği düşüncesini biraz daha ileri götürerek devlette her şeyin ortak olmasını savunmuştur. Başlıca iktisadi görüşleri yukarıda ifade edilen İlk Çağ düşünürü hangisidir?
+A) Platon
+B) Aristoteles
+C) Empedokles
+D) Anakismenes
+E) Demokritos
+Çözüm: Platon, her türlü devlet müdahalesini kabul ederek, Kollektivist bir düşünceyi savunmuştur. Üretim araçlarının mülkiyeti devlete aittir.
+Doğru cevap A şıkkıdır.
+
+4) Platon'un ideal devlet anlayışında yöneticilerin üretim ve parayla ilişkileri hakkında ne söylenmiştir?
+A) Para arzını belirleme yetkisi yöneticilerin olmalıdır
+B) Yöneticiler sadece tarıma yatırım yapmalıdır
+C) Yöneticilerin ticaret yapmasına izin verilmelidir
+D) Yöneticiler faiz düzeyine karışmamalıdır
+E) Yöneticiler üretim işine karışmamalıdır
+Çözüm: Platon'a göre, filozoflar devleti yönetmeli ve devleti yönetenler hiçbir zaman üretim işine karışmamalıdır.
+Doğru cevap E şıkkıdır.
+
+5) Aşağıdakilerden hangisi reform akımının ortaya çıkardığı bazı önemli sonuçlardan biridir?
+A) Eğitimde laikleşme süreci başlamıştır
+B) Avrupa'da mezhep çatışmaları sonlanmıştır
+C) Feodalizmin güç kazanmıştır
+D) Kiliselerin mal varlığı artmıştır
+E) İncil'in Latince dışındaki dillere çevrilmesi yasaklanmıştır
+Çözüm: Reform akımının ortaya çıkardığı bazı önemli sonuçlar şunlardır: Avrupa'da yeni mezheplerin doğmasıyla mezhep çatışmaları başlamıştır, Katolik kilisesi kendini yenilemiştir, Eğitimde laikleşme süreci başlamıştır, Kiliselerin mal varlığına el konulmuştur, Avrupa'da sosyo-ekonomik gelişme için uygun bir ortam oluşmuştur.
+Doğru cevap A şıkkıdır.
+
+6) Geç Protestan Geleneği düşüncesinin en önemli temsilcisi aşağıdaki düşünürlerden hangisidir?
+A) Max Weber
+B) Martin Luther
+C) Karl Poper
+D) John Calvin
+E) Nelson Darby
+Çözüm: Bu düşüncenin en önemli temsilcisi John Calvin dir.
+Doğru cevap D şıkkıdır.
+
+7) Klasik iktisat deyiminden ilk bahseden iktisatçı aşağıdakilerden hangisidir?
+A) Adam Smith
+B) Sir William Petty
+C) David Ricardo
+D) John Stuart Mill
+E) Karl Marx
+Çözüm: Klasik iktisat deyiminden ilk bahseden Marx'tır. Marx bu deyimi 1859'da yayınlanan Ekonomi Politiğin Eleştirisine Katkı isimli kitabında bahsetmiştir.
+Doğru cevap E şıkkıdır.
+
+8) Değer alanına katkı sağlayan klasik iktisatçı aşağıdakilerden hangisidir?
+A) Luc Soete
+B) Franca Malerna
+C) Jeremy Bentham
+D) Abraham Wald
+E) Robert Barro
+Çözüm: Jeremy Bentham'ın faydacı bakış açısının en önemli katkısı değer alanında oldu.
+Doğru cevap C şıkkıdır.
+
+9) I. Skolastik düşüncenin en önemli kişisi olarak kabul edilmektedir. II. Ona göre ticaretin adil olması durumunda meşru görülmesi mümkündür. III. Servet edinmeyi meşru karşılamasına rağmen insanların hiçbir şekilde servet hırsına kapılmamaları ve elde edilen serveti sosyal hizmetler amacıyla kullanmaları öğütlenmiştir. Başlıca iktisadi görüşleri yukarıda ifade edilen düşünür hangisidir?
+A) Occamlı William
+B) Thomas d'Aquin
+C) Padovalı Marcilius
+D) John Calvin
+E) Martin Luther
+Çözüm: Skolastik düşüncenin en önemli kişisi St. Thomas d'Aquin dir.
+Doğru cevap B şıkkıdır.
+
+10) Aşağıdakilerden hangisi Malthus'un ücretlerde ilgili düşüncesini yansıtmaktadır?
+A) İnsanlar bolluk içinde yaşamaktadır.
+B) Besin kaynakları verimlilik artışı ile hızla çoğalmaktadır.
+C) Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+D) Gıda fiyatları düşmekte ortalama yaşam standardı artmaktadır.
+E) Verimsiz topraklar ile üretim maliyetleri düşmektedir.
+Çözüm: Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+Doğru cevap C şıkkıdır.
+
+11) Fikirleri açısından fizyokrasi ile klasik iktisadi düşünce arasında bir yerde duran düşünür aşağıdakilerden hangisidir?
+A) Mirabeau
+B) de Nemours
+C) de Gournay
+D) la Riviere
+E) Turgot
+Çözüm: Turgot, düşünceleri ile fizyokrasi ve klasik iktisadi düşünce arasında bir yerde durur.
+Doğru cevap E şıkkıdır.
+
+12) Tüketicinin faydasını maksimum yapabilmesi için her bir maldan elde ettiği faydanın o malın fiyatına oranının eşitlenmesi aşağıdakilerden hangisi ile açıklanır?
+A) Marjinal ikame oranı ilkesi
+B) Azalan marjinal fayda ilkesi
+C) Eş marjinal fayda ilkesi
+D) Subjektif değer teorisi
+E) Gossen kanunları
+Çözüm: Tüketici dengesi için geçerli olan "eş marjinal fayda ilkesine" dönüşecektir.
+Doğru cevap C şıkkıdır.
+
+13) Menger, tüketici ihtiyaçlarını doğrudan tatmin edebilen mallara ne ad vermiştir?
+A) Alt düzey mallar
+B) Üst düzey mallar
+C) Serbest mallar
+D) Yeniden üretilmesi mümkün olmayan mallar
+E) İthal mallar
+Çözüm: Menger malları "alt düzey mallar" ve "üst düzey mallar" olarak iki ana gruba ayırır. Tüketici ihtiyaçlarını doğrudan tatmin edebilen mallar, alt düzey mallardır.
+Doğru cevap A şıkkıdır.
+
+14) Philip W. von Hornick, bir ülkenin zenginliğini artırmak için hangi stratejiyi savunmuştur?
+A) Nüfus artışının önlenmesi
+B) Değerli madenlerin ülkeden çıkarılmasının engellenmesi
+C) Faiz oranlarının artırılması
+D) Yabancı malların ülkeye ithal edilmesi
+E) Kamu harcamalarının kısıtlanması
+Çözüm: Philip W. von Hornick'e göre, hangi nedenle olursa olsun ülkeden değerli maden çıkışı engellenmeli.
+Doğru cevap B şıkkıdır.
+
+15) François Quesnay, iktisadi olayların yorumlanmasında hangi yöntemi ilk kez uygulamıştır?
+A) Tümdengelim
+B) Tümevarım
+C) Deneysel yöntem
+D) Niteliksel analiz
+E) Miktarsal analiz
+Çözüm: Quesnay ilk kez tümdengelim yöntemini iktisadi olayların yorumlanmasına uyarlamış.
+Doğru cevap A şıkkıdır.
+
+16) Fizyokratlara göre kısır sınıf hangi gruplardan oluşmaktadır?
+A) Kilise mensupları ve soylular
+B) Çiftçiler ve ormancılar
+C) Tüccarlar ve zanaatkârlar
+D) Balıkçılar ve madenciler
+E) Toprak sahipleri ve üreticiler
+Çözüm: Kısır sınıf, yani tüccarlar, zanaatkârlar ve finansmancılar.
+Doğru cevap C şıkkıdır.
+
+17) Mirabeau, vergilerin hangi özelliklere sahip olması gerektiğini savunmuştur?
+A) Karmaşık ve dolaylı
+B) Basit, doğrudan ve ödeme gücünü dikkate alan
+C) Sadece tüccar ve zanaatkarlardan alınan
+D) Yüksek oranlı ve geniş kapsamlı
+E) Sadece aristokratlardan alınan
+Çözüm: Toplanan vergiler nitelik itibariyle basit, doğrudan ve ödeme gücünü dikkate alacak özellikler taşımalıydı.
+Doğru cevap B şıkkıdır.
+
+18) Avrupa sanayisinde temel girdilerin çelik, bakır ve metal alaşımlar olduğu; ulaşımda çelik demiryolları ve çelik gemilerin kullanıldığı ve taşımacılıkta elektriğin yaygınlaştığı dönem aşağıdakilerden hangisidir?
+A) 1773-1800
+B) 1800-1850
+C) 1850-1895
+D) 1895-1918
+E) 1918-1936
+Çözüm: 1895-1918 arasında sanayide ve taşımacılıkta elektrik yaygınlaşıyor.
+Doğru cevap D şıkkıdır.
+
+19) Aşağıdakilerden hangisi Neo-klasik iktisatta faizin nasıl belirlendiğini açıklamak için kullanılmaktadır?
+A) Portföy kuramı
+B) Likidite tercihi teorisi
+C) Ödünç verilebilir fonlar teorisi
+D) Böhm-Bawerk faiz teorisi
+E) Hicks-Hansen faiz oranı teorisi
+Çözüm: Irving Fisher tarafından geliştirilen ödünç verilebilir fonlar teorisi ile açıklanmaktadır.
+Doğru cevap C şıkkıdır.
+
+20) Fizyokratlara göre devletin ekonomideki rolü nedir?
+A) Tam denetim sağlamalıdır.
+B) Müdahaleci olmalıdır.
+C) Ulusal savunma ve büyük yatırımları yönetmelidir.
+D) Vergi toplama dışında ekonomiye karışmamalıdır.
+E) Para arzını kontrol etmelidir.
+Çözüm: Fizyokratlara göre devlet, ulusal savunma, bayındırlık yatırımları ve adaletin sağlanması gibi görevleri üstlenmeli ancak ekonomiye müdahale etmemelidir.
+Doğru cevap C şıkkıdır.`
+            },
+            {
+                id: 8,
+                name: "Dosya: download (4).pdf",
+                content: `1) Aşağıdakilerden hangisi Ricardo'nun Klasik İktisat teorisine sunduğu katkılardandır?
+A) Emeğin fiyatı
+B) Emeğin maliyeti
+C) Kar dağılımı
+D) Karşılaştırmalı üstünlük teorisi
+E) İktisadi denge
+Çözüm: Klasik dış ticaret teorisi Smith ve Ricardo'nun teorileri bilinmektedir. Smith, dış ticaretin özgürce yapılabilmesini savundu ve mutlak üstünlükler teorisini geliştirdi. Ricardo ise karşılaştırmalı üstünlükler teorisini ileri sürdü. Her ikisi de dış ticarette özgürlükten yana olmalarına rağmen öz- gürlüğü isteme gerekçeleri birbirlerinden farklıydı. Mill ise Ricardo'nun dış ticaret teorisini esas alarak onu geliştirdi.
+Doğru cevap D şıkkıdır.
+
+2) Klasik iktisatçılar, ekonomide hangi dengenin sağlanabileceğini savunur?
+A) Tam istihdam dengesi
+B) Eksik istihdam dengesi
+C) Sabit kur dengesi
+D) Faiz dengesi
+E) Enflasyon dengesi
+Çözüm: Ekonomik yapının doğal durumu tıpkı evrende olduğu gibi denge durumuydu. Bu nedenle bütün klasik iktisatçılar ekonominin tam istihdamda, kendiliğinden bir denge süreci içinde olduğuna iman ettiler.
+Doğru cevap A şıkkıdır.
+
+3) Klasik iktisatçılara göre, kısa dönemde piyasa ücreti (fiili ücret) nasıl belirlenir?
+A) Piyasa ücreti, tamamen işverenlerin kâr hedeflerine bağlı olarak belirlenir ve emek arzı ile talebiyle ilişkili değildir.
+B) Piyasa ücreti, emek arzı ve talebine bağlı olarak belirlenir, ancak reel ücrete etki etmez.
+C) Piyasa ücreti, reel ücrete bağlı olarak emeğin arzı ve talebi tarafından belirlenir.
+D) Piyasa ücreti, sadece emek talebine bağlı olarak belirlenir ve emek arzı ile reel ücrete ilişkin bir etkisi yoktur.
+E) Piyasa ücreti, reel ücretten bağımsız olarak yalnızca devlet politikaları tarafından belirlenir.
+Çözüm: Klasik iktisatçılarda kısa dönemde ücret, yani piyasa ücreti (fiili), reel ücrete bağlı olarak emeğin arzı ve talebi tarafından belirlenirdi.
+Doğru cevap C şıkkıdır.
+
+4) 1. Topraklarının dağınık olması nedeniyle denizcilik faaliyetleri gelişmiştir. I. Genel olarak kapalı ev ekonomisi uygulanmıştır. Yukarıdaki maddeler, hangi İlk Çağ medeniyetine ilişkin başlıca iktisadi nitelikleri ifade etmektedir?
+A) Yunan
+B) Hint
+C) Çin
+D) Mısır
+E) Pers
+Çözüm: Yunanistan topraklarının dağınık olması nedeniyle denizcilik faaliyetleri gelişmiş ve ulaşım yolu olarak deniz ulaşımı gelişmiştir. Eski Yunanda genel olarak kapalı ev ekonomisi mevcuttur.
+Doğru cevap A şıkkıdır.
+
+5) Platon'un ideal devlet anlayışında yöneticilerin üretim ve parayla ilişkileri hakkında ne söylenmiştir?
+A) Para arzını belirleme yetkisi yöneticilerin olmalıdır
+B) Yöneticiler sadece tarıma yatırım yapmalıdır
+C) Yöneticilerin ticaret yapmasına izin verilmelidir
+D) Yöneticiler faiz düzeyine karışmamalıdır
+E) Yöneticiler üretim işine karışmamalıdır
+Çözüm: Platon ideal bir devlet hayal etmiştir. Platon'a göre, filozoflar devleti yönetmeli ve devleti yönetenler hiçbir zaman üretim işine karışmamalıdır. Yöneticilerin üretim ve parayla ilişkileri yasaklanmalıdır.
+Doğru cevap E şıkkıdır.
+
+6) Geç Protestan Geleneğin temsilcisi John Calvin'in iktisadi düşüncesine göre kurtuluşa nasıl ulaşılır?
+A) Kilisenin iktisadi politikalarına tam uyarak
+B) Meslekte uzmanlaşarak ve disiplinli olarak
+C) Lüks yaşam sürerek
+D) Hedonist tüketim anlayışına uyarak
+E) Faizden uzak durarak
+Çözüm: Calvin'e göre, "Günahkar insanın" kurtuluşa erebilmesi (cennete girebilmesi) için mesleğinde uzmanlaşması, sistemli çalışması, kendini disipline etmesi, nefsini ve arzularını kontrol etmesi yeterlidir.
+Doğru cevap B şıkkıdır.
+
+7) Aşağıdakilerden hangisi Rönesans'ın ortaya çıkardığı sonuçlardan biridir?
+A) Kilisenin gücü artmıştır
+B) Feodalizm güçlenmiştir
+C) Skolastik görüş güçlenmiştir
+D) Okuma yazma oranı düşmüştür
+E) Pozitif düşünce gelişmeye başlamıştır
+Çözüm: Rönesans'ın bazı önemli sonuçları: Skolastik görüş yıkılmış bunun yerine pozitif düşünce gelişmeye başlamıştır, Reform hareketleri için uygun bir ortamın oluşmasına zemin hazırlamıştır.
+Doğru cevap E şıkkıdır.
+
+8) İlk Çağ'ın kapanmasına neden olan olay aşağıdakilerden hangisidir?
+A) Babil kralı Hammurabi kanunlarının kabul edilmesi ile toplumun üç sınıfa ayrılması
+B) Yunanistan toprklarının dağınık olması sebebiyle deniz ulaşımının gelişmiş olması
+C) Platon'un her türlü devlet müdahalesini kabul ederek devlette herşeyin ortak olmasını savunması
+D) Aristo'nun özgür düşünceyi, özel mülkiyet hakkını, liberal bir ekonomik düzeni savunması
+E) Savaş ortmamı sonucunda Batı Roma İmparatorluğu'nun Cermen istilacıları tarafından yıkılması
+Çözüm: Sürekli olarak yaşanan savaş ortamı sonucunda 476 yılında Batı Roma İmparatorluğu Cermen istilacıları tarafından yıkılmış ve böylece İlk Çağ kapanmıştır.
+Doğru cevap E şıkkıdır.
+
+9) Klasik iktisat düşüncesinin İngiltere'deki ilk savunucusu aşağıdakilerden hangisidir?
+A) Adam Smith
+B) Sir William Petty
+C) Alfred Marshall
+D) Jean Baptiste Say
+E) Thomas Robert Malthus
+Çözüm: Klasik iktisat İngiltere'de Sir William Petty ile başlamıştır (1623'ten 1823'e).
+Doğru cevap B şıkkıdır.
+
+10) Aydınlanma döneminin ilk aşaması aşağıdaki hangi dönemde gerçekleşmiştir?
+A) 1300-1400
+B) 1450-1500
+C) 1500-1650
+D) 1700-1800
+E) 1750-1850
+Çözüm: Aydınlanma dönemi genelde 1500-1650 ve 1650-1750 arasında olmak üzere iki aşamada değerlendiriliyordu. İlk dönemde astronomi, matematik ve fizik bilimlerinde yaşanan gelişmeler...
+Doğru cevap C şıkkıdır.
+
+11) I. Ekonomik kalkınmaya önem verir, bütün vurgusunu ekonomik gelişme ve Tanrı rızasına yöneltir. II. Bu gelenek, Tanrının insanlara bir kutsal daveti olduğunu ve her insanın belli bir meslekte uzmanlaşarak bu davete cevap vermesi gerektiğini savunur. III. Bu geleneğin, günümüz kapitalist gelenekten farkı ise araçsal aklın hayata hakim olmasına, hedonist (hazcılık) tüketim anlayışına, lükse, israfa, çıkarcılığa taraftar olmamasıdır. Başlıca nitelikleri yukarıda ifade edilen düşünce geleneği hangisidir?
+A) İlk Kalvinist
+B) Gelişmiş Levanten
+C) İleri Pürüten
+D) Erken Skolastik
+E) Geç Protestan
+Çözüm: Geç Protestan Geleneği: Ekonomik kalkınmaya önem verir. Bütün vurgusunu ekonomik gelişme ve Tanrı rızasına kaydırır.
+Doğru cevap E şıkkıdır.
+
+12) Merkantilizmi siyasal amaçları gerçekleştirmek için devletin ekonomik yönden güçlü olmasını hedefleyen bir sistem olarak tanımlayan yazar aşağıdakilerden hangisidir?
+A) V. Mirabeau
+B) A. Smith
+C) G. Schmoller
+D) W. Cunningham
+E) J-B. Colbert
+Çözüm: Merkantilizmi siyasal amaçları gerçekleştirmek için devletin ekonomik yönden güçlü olmasını hedefleyen bir sistem olarak tanımlayan yazar W. Cunningham'dır.
+Doğru cevap D şıkkıdır.
+
+13) I-Sanayi devrimi, II - Feodalitenin çözülmeye başlaması, III- Kent ekonomilerinin canlanması, IV - Nüfus artışı. Yukarıda verilenlerden hangileri merkantalist düşüncenin yaygınlık kazanmasına yol açan faktörlerdendir?
+A) I ve II
+B) I ve III
+C) I, II ve III
+D) I, III ve IV
+E) II, III ve IV
+Çözüm: Feodalitenin çözülmeye başlaması, kent ekonomilerinin canlanması ve nüfus artışı merkantalist düşüncenin yaygınlık kazanmasına yol açan faktörler arasındadır.
+Doğru cevap E şıkkıdır.
+
+14) Aşağıdakilerden hangisi Malthus'un ücretlerde ilgili düşüncesini yansıtmaktadır?
+A) İnsanlar bolluk içinde yaşamaktadır.
+B) Besin kaynakları verimlilik artışı ile hızla çoğalmaktadır.
+C) Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+D) Gıda fiyatları düşmekte ortalama yaşam standardı artmaktadır.
+E) Verimsiz topraklar ile üretim maliyetleri düşmektedir.
+Çözüm: Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.
+Doğru cevap C şıkkıdır.
+
+15) I-Tek vergi, II - Tek ordu, III - Tek kanun, IV- Tek ekonomi, V - Tek para birimi. Merkantilizm dönemindeki ulusal yapılanma sürecinde yukarıda verilenlerden hangilerine doğru bir gidiş süreci başlamıştır?
+A) I, II ve IV
+B) III, IV ve V
+C) I, II, III ve IV
+D) II, III, IV ve V
+E) I, II, III, IV ve V
+Çözüm: Belirtilen dönemde soruda verilenlerin tümüne doğru bir gidiş süreci başlamıştır.
+Doğru cevap E şıkkıdır.
+
+16) Güneş lekeleri teorisi aşağıdakilerden hangisine aittir?
+A) W. Stanley Jevons
+B) Carl Menger
+C) Leon Walras
+D) Robert Makthus
+E) Adam Smith
+Çözüm: Jevons güneş lekeleri teorisi ile bu alanın ilk katkı yapanlarından biridir.
+Doğru cevap A şıkkıdır.
+
+17) Johann J. Becher, Almanya'nın ekonomik olarak gelişmesi için ne önerir?
+A) Tarım ürünlerinin serbestçe ithal edilmesi
+B) İthalatın artırılması
+C) Çiftçi, tüccar ve zanaatkârların organizasyonlar altında toplanması
+D) Kamu işlerinde vergilerle istihdam sağlanması
+E) Nüfus artışının önlenmesi
+Çözüm: Becher, Almanya'nın ekonomik olarak gelişmesi için çiftçi, tüccar ve zanaatkârların bir organizasyon altında toplanarak bunların teşvik edilmesi için ürettikleri mallara karşı talebin körüklenmesi gerektiğini savunmuştur.
+Doğru cevap C şıkkıdır.
+
+18) Fizyokratların önerdiği tek vergi kimler tarafından ödenmelidir?
+A) Üretici sınıf
+B) Kısır sınıf
+C) Zanaatkârlar
+D) Dağıtıcı sınıf içindeki toprak sahipleri
+E) Tüccarlar
+Çözüm: Fizyokratlar tek vergi konusunda muhatap olarak dağıtıcı sınıf içindeki toprak sahiplerini almışlar ve üretici sınıf ile kısır sınıfa koyulacak her türlü verginin toprak sahibine yansıyacağını ifade etmişlerdi.
+Doğru cevap D şıkkıdır.
+ 
+19) Aşağıdakilerden hangisi Neo-klasik iktisatta faizin nasıl belirlendiğini açıklamak için kullanılmaktadır?
+A) Portföy kuramı
+B) Likidite tercihi teorisi
+C) Ödünç verilebilir fonlar teorisi
+D) Böhm-Bawerk faiz teorisi
+E) Hicks-Hansen faiz oranı teorisi
+Çözüm: Neo-klasik iktisatta faizin nasıl belirlendiği, Irving Fisher tarafından geliştirilen ödünç verilebilir fonlar teorisi ile açıklanmaktadır.
+Doğru cevap C şıkkıdır.
+ 
+20) Fizyokratların "kısır sınıf" olarak tanımladığı grup hangisidir?
+A) Tüccarlar ve zanaatkârlar
+B) Çiftçiler
+C) Devlet görevlileri
+D) Sanayiciler
+E) Askerler
+Çözüm: Fizyokratlar, tüccar ve zanaatkârları kısır sınıf olarak nitelendirirler çünkü onların üretimi tarımsal artı değere katkıda bulunmaz.
+Doğru cevap A şıkkıdır.`
+            }
+        ];
+
+        let currentExam = null;
+        let examsData = [];
+
+        // --- Parsing Logic ---
+        function parseExams() {
+            examsData = rawData.map(data => {
+                const questions = [];
+                // Split by question number (e.g., "1)", "2)", "1.", "2.")
+                // Regex looks for new line followed by digit and ) or .
+                const rawQuestions = data.content.split(/\n\s*\d+[\)\.]\s+/).filter(q => q.trim().length > 0);
+
+                rawQuestions.forEach((qBlock, index) => {
+                    // Extract parts
+                    let solutionText = "";
+                    let correctAnswerChar = "";
+                    
+                    // Find solution block
+                    const solutionMatch = qBlock.match(/Çözüm:\s*([\s\S]*?)(?=\n\s*Doğru cevap|\n\s*$)/i);
+                    if (solutionMatch) {
+                        solutionText = solutionMatch[1].trim();
+                    }
+
+                    // Find correct answer
+                    const correctMatch = qBlock.match(/Doğru cevap\s+([A-E])\s+şıkkıdır/i);
+                    if (correctMatch) {
+                        correctAnswerChar = correctMatch[1].toUpperCase();
+                    }
+
+                    // Remove solution and correct answer line from body to parse options
+                    let bodyAndOptions = qBlock.replace(/Çözüm:[\s\S]*/i, "").trim();
+
+                    // Extract Options
+                    // Options usually start with A), B), etc. on new lines or same line
+                    const options = [];
+                    const optionMatches = [...bodyAndOptions.matchAll(/(?:^|\n|\s)([A-E])\)\s+([\s\S]*?)(?=(?:^|\n|\s)[A-E]\)|$)/g)];
+                    
+                    let questionText = bodyAndOptions;
+                    if (optionMatches.length > 0) {
+                        // The question text is everything before the first option
+                        questionText = bodyAndOptions.substring(0, optionMatches[0].index).trim();
+                        
+                        optionMatches.forEach(match => {
+                            options.push({
+                                letter: match[1],
+                                text: match[2].trim()
+                            });
+                        });
+                    }
+
+                    if (questionText) {
+                        questions.push({
+                            number: index + 1,
+                            text: questionText,
+                            options: options,
+                            solution: solutionText,
+                            correctAnswer: correctAnswerChar
+                        });
+                    }
+                });
+
+                return {
+                    id: data.id,
+                    name: data.name,
+                    questions: questions
+                };
+            });
+        }
+
+        // --- UI Logic ---
+        const examListEl = document.getElementById('examList');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const currentExamTitleEl = document.getElementById('currentExamTitle');
+        const questionCountEl = document.getElementById('questionCount');
+        const correctCountEl = document.getElementById('correctCount');
+        const wrongCountEl = document.getElementById('wrongCount');
+        const sidebar = document.getElementById('sidebar');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('overlay');
+        const progressText = document.getElementById('progressText');
+        const progressBar = document.getElementById('progressBar');
+
+        let stats = { correct: 0, wrong: 0 };
+        let currentExamStats = { answered: 0, total: 0 };
+
+        function init() {
+            parseExams();
+            renderExamList();
+            
+            // Event Listeners
+            mobileMenuBtn.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function renderExamList() {
+            examListEl.innerHTML = '';
+            examsData.forEach(exam => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left px-4 py-3 rounded-lg hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200 text-gray-700 font-medium mb-2 flex items-center";
+                btn.innerHTML = `<i class="fas fa-file-alt mr-3 text-indigo-400"></i> ${exam.name}`;
+                btn.onclick = () => loadExam(exam.id);
+                examListEl.appendChild(btn);
+            });
+        }
+
+        function loadExam(examId) {
+            currentExam = examsData.find(e => e.id === examId);
+            if (!currentExam) return;
+
+            // Update UI
+            currentExamTitleEl.textContent = currentExam.name;
+            questionCountEl.textContent = `Toplam Soru: ${currentExam.questions.length}`;
+            questionCountEl.classList.remove('hidden');
+            
+            // Reset stats for view (global stats persist? Let's reset for exam context mostly)
+            // Ideally stats should be per exam but for simplicity we show session stats
+            
+            // Render Questions
+            questionsContainer.innerHTML = '';
+            currentExamStats.total = currentExam.questions.length;
+            currentExamStats.answered = 0;
+            updateProgress();
+
+            currentExam.questions.forEach(q => {
+                const qEl = createQuestionElement(q);
+                questionsContainer.appendChild(qEl);
+            });
+
+            // Close sidebar on mobile
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+        }
+
+        function createQuestionElement(q) {
+            const container = document.createElement('div');
+            container.className = "bg-white rounded-xl shadow-sm border border-gray-100 p-6 transition-all hover:shadow-md";
+
+            // Question Header
+            const header = document.createElement('div');
+            header.className = "flex items-start mb-4";
+            header.innerHTML = `
+                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full mr-3 mt-1 min-w-fit">Soru ${q.number}</span>
+                <p class="text-gray-800 font-medium text-lg leading-relaxed">${q.text}</p>
+            `;
+            container.appendChild(header);
+
+            // Options
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = "space-y-2 mb-4 pl-0 md:pl-4";
+            
+            let isAnswered = false;
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-all flex items-center group";
+                btn.innerHTML = `
+                    <span class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 font-bold mr-3 group-hover:bg-indigo-100 group-hover:text-indigo-600 transition-colors">${opt.letter}</span>
+                    <span class="text-gray-700">${opt.text}</span>
+                    <i class="ml-auto fas hidden"></i>
+                `;
+
+                btn.onclick = () => {
+                    if (isAnswered) return;
+                    isAnswered = true;
+                    currentExamStats.answered++;
+                    updateProgress();
+
+                    // Check answer
+                    const isCorrect = opt.letter === q.correctAnswer;
+                    
+                    if (isCorrect) {
+                        btn.className = "w-full text-left p-3 rounded-lg border border-green-200 bg-green-50 flex items-center";
+                        btn.querySelector('span').className = "w-8 h-8 flex items-center justify-center rounded-full bg-green-200 text-green-700 font-bold mr-3";
+                        btn.querySelector('i').className = "ml-auto fas fa-check text-green-600";
+                        stats.correct++;
+                    } else {
+                        btn.className = "w-full text-left p-3 rounded-lg border border-red-200 bg-red-50 flex items-center";
+                        btn.querySelector('span').className = "w-8 h-8 flex items-center justify-center rounded-full bg-red-200 text-red-700 font-bold mr-3";
+                        btn.querySelector('i').className = "ml-auto fas fa-times text-red-600";
+                        stats.wrong++;
+
+                        // Highlight correct answer
+                        const correctBtn = Array.from(optionsDiv.children).find(b => b.textContent.trim().startsWith(q.correctAnswer));
+                        if (correctBtn) {
+                            correctBtn.className = "w-full text-left p-3 rounded-lg border border-green-200 bg-green-50 flex items-center opacity-70";
+                            correctBtn.querySelector('i').className = "ml-auto fas fa-check text-green-600";
+                        }
+                    }
+                    updateStats();
+                };
+                optionsDiv.appendChild(btn);
+            });
+            container.appendChild(optionsDiv);
+
+            // Solution Section
+            if (q.solution) {
+                const solutionContainer = document.createElement('div');
+                
+                const toggleBtn = document.createElement('button');
+                toggleBtn.className = "text-indigo-600 text-sm font-medium hover:text-indigo-800 focus:outline-none flex items-center mt-4";
+                toggleBtn.innerHTML = `<i class="fas fa-lightbulb mr-2"></i> Çözümü Göster`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = "solution-enter bg-indigo-50 rounded-lg mt-3 text-sm text-gray-700 border border-indigo-100";
+                contentDiv.innerHTML = `<div class="p-4"><p><span class="font-bold text-indigo-700">Çözüm:</span> ${q.solution}</p></div>`;
+
+                toggleBtn.onclick = () => {
+                    const isActive = contentDiv.classList.contains('solution-enter-active');
+                    if (isActive) {
+                        contentDiv.classList.remove('solution-enter-active');
+                        toggleBtn.innerHTML = `<i class="fas fa-lightbulb mr-2"></i> Çözümü Göster`;
+                    } else {
+                        contentDiv.classList.add('solution-enter-active');
+                        toggleBtn.innerHTML = `<i class="fas fa-chevron-up mr-2"></i> Çözümü Gizle`;
+                    }
+                };
+
+                solutionContainer.appendChild(toggleBtn);
+                solutionContainer.appendChild(contentDiv);
+                container.appendChild(solutionContainer);
+            }
+
+            return container;
+        }
+
+        function updateStats() {
+            correctCountEl.textContent = stats.correct;
+            wrongCountEl.textContent = stats.wrong;
+        }
+
+        function updateProgress() {
+            progressText.textContent = `${currentExamStats.answered}/${currentExamStats.total}`;
+            const pct = currentExamStats.total === 0 ? 0 : (currentExamStats.answered / currentExamStats.total) * 100;
+            progressBar.style.width = `${pct}%`;
+        }
+
+        // Initialize
+        init();
+
+    </script>
+</body>
+</html>
