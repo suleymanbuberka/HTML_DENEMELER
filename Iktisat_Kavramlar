@@ -1,715 +1,597 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>İktisat Kavramları Soru Bankası</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-rel="stylesheet">
-<style>
-body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background-color: #f3f4f6;
-}
-.sidebar {
-transition: all 0.3s ease;
-}
-.question-card {
-transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.question-card:hover {
-transform: translateY(-2px);
-}
-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-.option-label {
-cursor: pointer;
-transition: all 0.2s;
-}
-.option-label:hover {
-background-color: #f0f9ff;
-}
-.option-input:checked + .option-label {
-background-color: #e0f2fe;
-border-color: #3b82f6;
-color: #1e40af;
-}
-/* Confetti Animation */
-@keyframes pop {
-0% { transform: scale(0); opacity: 0; }
-50% { transform: scale(1.2); opacity: 1; }
-100% { transform: scale(1); opacity: 0; }
-}
-.confetti-piece {
-position: absolute;
-width: 10px;
-height: 10px;
-background: #ffd700;
-border-radius: 50%;
-}
-animation: pop 0.5s ease-out forwards;
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İktisat Kavramları Soru Bankası</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .question-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .option-label {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-label:hover {
+            background-color: #f0f9ff;
+        }
+        .option-input:checked + .option-label {
+            background-color: #e0f2fe;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+        /* Confetti Animation */
+        @keyframes pop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: pop 0.5s ease-out forwards;
+        }
+    </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
-<!-- Header -->
-<header class="bg-blue-800 text-white p-4 shadow-lg flex justify-between items-center
-z-20">
-<div class="flex items-center gap-3">
-<i class="fa-solid fa-book-open text-2xl"></i>
-<h1 class="text-xl font-bold tracking-wide hidden md:block">İktisat Soru
-Bankası</h1>
-<h1 class="text-lg font-bold tracking-wide md:hidden">İktisat SB</h1>
-</div>
-<div class="text-sm bg-blue-700 px-3 py-1 rounded-full flex items-center gap-2">
-<i class="fa-solid fa-chart-pie"></i>
-<span id="total-progress">Genel İlerleme: 0%</span>
-</div>
-</header>
-<div class="flex flex-1 overflow-hidden relative">
-<!-- Sidebar (Units) -->
-<aside class="w-full md:w-72 bg-white border-r border-gray-200 flex flex-col overflow-
-y-auto md:relative absolute z-10 h-full transform -translate-x-full md:translate-x-0
-transition-transform duration-300 shadow-xl md:shadow-none" id="sidebar">
-<div class="p-4 bg-gray-50 border-b border-gray-100 font-semibold text-gray-700
-flex justify-between items-center sticky top-0 bg-gray-50 z-10">
-<span><i class="fa-solid fa-list-ul mr-2"></i>Üniteler</span>
-<button onclick="toggleSidebar()" class="md:hidden text-gray-500 hover:text-
-red-500 transition"><i class="fa-solid fa-times"></i></button>
-</div>
-<nav class="flex-1 p-2 space-y-1 pb-20" id="unit-list">
-<!-- Units will be populated here -->
-</nav>
-</aside>
-<!-- Overlay for mobile sidebar -->
-<div onclick="toggleSidebar()" id="sidebar-overlay" class="fixed inset-0 bg-black bg-
-opacity-50 z-0 hidden md:hidden transition-opacity"></div>
-<!-- Main Content -->
-<main class="flex-1 overflow-y-auto p-4 md:p-8 w-full relative bg-gray-50" id="main-
-scroll">
-<button onclick="toggleSidebar()" class="md:hidden mb-4 bg-white p-2 px-4
-rounded-lg shadow-sm text-blue-800 font-semibold flex items-center gap-2 border border-
-blue-100 w-full justify-center">
-<i class="fa-solid fa-bars"></i> Ünite Listesini Aç
-</button>
-<!-- Welcome Screen -->
-<div id="welcome-screen" class="text-center py-10 max-w-2xl mx-auto mt-10">
-<div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-<div class="w-24 h-24 bg-blue-50 text-blue-600 rounded-full flex items-center
-justify-center mx-auto mb-6 shadow-inner">
-<i class="fa-solid fa-graduation-cap text-5xl"></i>
-</div>
-<h2 class="text-3xl font-bold text-gray-800 mb-4">Hoş Geldiniz!</h2>
-<p class="text-gray-600 mb-8 text-lg">
-Bu uygulama <strong>8 ünitenin tamamını</strong> ve toplam <strong>75
-iktisadi terimi</strong> içerir.
-<br><br>
-Başlamak için sol menüden bir ünite seçin.
-</p>
-<div class="grid grid-cols-2 gap-4 mb-8 text-left">
-<div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-<h3 class="font-bold text-blue-800 mb-1"><i class="fa-solid fa-check-
-double mr-2"></i>Tam Kapsam</h3>
-<p class="text-sm text-blue-600">PDF'teki tüm tanımlar eksiksiz
-eklendi.</p>
-</div>
-<div class="bg-green-50 p-4 rounded-lg border border-green-100">
-<h3 class="font-bold text-green-800 mb-1"><i class="fa-solid fa-rotate
-mr-2"></i>Anında Dönüt</h3>
-<p class="text-sm text-green-600">Doğru/Yanlış cevabı hemen gör.</p>
-</div>
-</div>
-<button onclick="loadUnit(0)" class="bg-blue-600 hover:bg-blue-700 text-
-white font-bold py-3 px-8 rounded-full transition shadow-lg hover:shadow-blue-500/30
-transform hover:-translate-y-1">
-1. Ünite ile Başla <i class="fa-solid fa-arrow-right ml-2"></i>
-</button>
-</div>
-</div>
-<!-- Quiz Container -->
-<div id="quiz-container" class="hidden max-w-4xl mx-auto pb-20">
-<div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6
-sticky top-0 z-10 backdrop-blur-md bg-opacity-95">
-<div class="flex justify-between items-center">
-<div>
-<h2 id="unit-title" class="text-xl md:text-2xl font-bold text-gray-
-800">Ünite Başlığı</h2>
-<div class="flex items-center gap-2 mt-1">
-<span class="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-1
-rounded" id="question-count-badge">0 Soru</span>
-<span class="text-xs text-gray-500" id="completed-count">0
-çözüldü</span>
-</div>
-</div>
-<div class="text-right pl-4 border-l border-gray-100">
-<div class="text-3xl font-bold text-blue-600" id="unit-score">0</div>
-<div class="text-[10px] text-gray-400 uppercase tracking-wider font-
-semibold">PUAN</div>
-</div>
-</div>
-<!-- Progress Bar -->
-<div class="w-full bg-gray-200 rounded-full h-1.5 mt-3">
-<div id="unit-progress-bar" class="bg-blue-600 h-1.5 rounded-full transition-
-all duration-500" style="width: 0%"></div>
-</div>
-</div>
-<div id="questions-list" class="space-y-6">
-<!-- Questions will be populated here -->
-</div>
-<!-- Unit Completion Modal (Inline) -->
-<div id="unit-completed-card" class="hidden bg-white p-8 rounded-2xl shadow-
-xl text-center border-t-4 border-green-500 mt-8">
-<div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-
-center justify-center mx-auto mb-4">
-<i class="fa-solid fa-trophy text-3xl"></i>
-</div>
-<h3 class="text-2xl font-bold text-gray-800 mb-2">Ünite Tamamlandı!</h3>
-<p class="text-gray-600 mb-6">Bu ünitedeki tüm soruları tamamladınız.</p>
-<div class="flex justify-center gap-4">
-<button onclick="loadUnit(currentUnitIndex)" class="bg-gray-100 hover:bg-
-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg transition">
-<i class="fa-solid fa-rotate-right mr-2"></i>Tekrar Çöz
-</button>
-<button onclick="loadNextUnit()" id="next-unit-btn" class="bg-green-600
-hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition shadow-lg
-hover:shadow-green-500/30">
-Sonraki Ünite <i class="fa-solid fa-arrow-right ml-2"></i>
-</div>
-</div>
-</button>
-</div>
-</div>
-</main>
-<script>
-// --- DATA ---
-// PDF kaynaklı tam liste. (Toplam 75 Tanım)
-const quizData = [
-{
-id: 1,
-title: "1. Ünite: İktisadı Neden Öğrenmeliyiz?",
-items: [
-{ term: "İktisat", def: "Kıtlık koşulları altında yapılan tercihlerin incelenmesidir."
-},
-{ term: "Kıtlık", def: "Bir şeyin mevcut miktarının arzulanan miktarı
-karşılamakta yetersiz kaldığı durumdur." },
-{ term: "Kaynaklar", def: "İhtiyaçlarımızı karşılayacak mal ve hizmetlerin
-üretilmesinde kullanılan şeylerdir (İş gücü, sermaye ve toprak)." },
-{ term: "Mal", def: "Üretiminde kıt kaynakların kullanıldığı, insan ihtiyaçlarını
-karşılama özelliğine sahip fiziki varlığı olan ürünlerdir." },
-{ term: "Hizmet", def: "Üretiminde kıt kaynakların kullanıldığı, insan
-ihtiyaçlarını karşılama özelliğine sahip fiziki varlığı olmayan ürünlerdir." },
-{ term: "Serbest Mal", def: "Doğada her istendiğinde bulunabilen ve bedel
-ödemeden elde edilebilen mallardır." },
-{ term: "Rasyonel Davranış", def: "Tercih yapmak veya karar almak durumunda
-olan bir iktisadi birimin kendi hedefine uygun biçimde hareket etmesidir." },
-{ term: "Marjinal Analiz", def: "Mevcut koşullar değiştiği zaman ne olacağının
-incelenmesidir." },
-{ term: "Diğer Şartlar Sabitken (Ceteris Paribus)", def: "Bir iktisadi olguyu
-etkileyen çok sayıda faktörden sadece bir tanesinin değiştiği, diğer faktörlerin ise
-değişmediği varsayımıdır." },
-{ term: "Mikro İktisat", def: "İktisadın insan davranışı ve insanların piyasa,
-endüstri, firma ve birey gibi nispeten küçük birimlerle ilişkili tercihlerini inceleyen
-bölümüdür." },
-{ term: "Makro İktisat", def: "İktisadın, bir bütün olarak ekonomiyi ve
-toplulaştırılmış ekonomik davranışı inceleyen bölümüdür." },
-{ term: "Pozitif İktisat", def: "İktisadın ne olduğunu belirlemeye çalışan ve
-değer yargısı içermeyen bölümüdür." },
-{ term: "Normatif İktisat", def: "Toplumsal refahın en üst düzeyde
-sağlanabilmesi için ne olması gerektiğini inceleyen, değer yargılarını yansıtan bölümdür." }
-]
-},
-{
-id: 2,
-title: "2. Ünite: Kıtlık, Tercih ve Fayda",
-items: [
-{ term: "Fırsat (Alternatif) Maliyeti", def: "Bir kararı uygularken vazgeçilen
-karar, yani bir tercih için vazgeçmek zorunda kalınan en değerli alternatiftir." },
-{ term: "Üretim İmkânları Sınırı", def: "Mevcut üretim faktörleri ve üretim
-teknolojisi veri iken belirli bir dönemde ekonominin maksimum düzeyde üretilebileceği
-çeşitli çıktı (ürün) bileşimlerini gösteren eğridir." },
-{ term: "Marjinal Dönüşüm Oranı", def: "Bir maldan bir birim daha fazla
-üretmek için öteki maldan ne kadar fedakarlık etmek gerektiğini gösteren orandır (fırsat
-maliyetini ölçer)." },
-{ term: "Piyasa Ekonomisi", def: "Neyin, nasıl ve kimler için üretileceği
-konusunun birbirlerinden bağımsız bireysel tüketiciler, üreticiler ve diğer organizasyonların
-kararlarına bağlı olduğu sistemdir." },
-{ term: "Kumanda Ekonomileri", def: "Temel ekonomik sorulara ilişkin kararların
-merkezi otorite tarafından alındığı sistemdir." },
-{ term: "Fayda", def: "Bireyin tüketilen mal ve hizmetten elde edeceği
-memnuniyettir." },
-{ term: "Toplam Fayda", def: "Belirli bir zaman diliminde, bireyin diğer mal ve
-hizmetlerden olan tüketimi sabit iken, bir malın çeşitli miktarlarının tüketilmesi sonucu
-ulaşılan tatmin düzeyidir." },
-{ term: "Marjinal Fayda", def: "Belirli bir zaman diliminde bir maldan, bir birim
-daha fazla tüketilmesi sonucunda ortaya çıkan toplam faydadaki değişmedir." }
-]
-},
-{
-id: 3,
-title: "3. Ünite: Arz ve Talep",
-items: [
-{ term: "Talep", def: "Diğer faktörler sabit iken belirli bir zaman diliminde
-tüketicilerin bir mal veya hizmetten farklı fiyat düzeylerinde satın almak istedikleri
-miktardır." },
-{ term: "Talep Kanunu", def: "Diğer faktörler sabit iken, belli bir zaman
-diliminde bir malın fiyatı ile o maldan tüketicilerin satın almak istediği miktar arasında ters
-yönlü bir ilişki olmasıdır." },
-{ term: "İkame Etkisi", def: "Diğer faktörler sabitken bir malın fiyatı arttığında
-tüketicinin fiyatı artan bu malın yerine göreceli olarak daha ucuz olan diğer malı tercih
-etmesidir." },
-{ term: "Gelir Etkisi", def: "Diğer faktörler sabitken, bir malın fiyatının artması
-neticesinde tüketicinin reel gelirinin (satın alma gücünün) azalması durumudur." },
-{ term: "Arz", def: "Diğer faktörler sabit iken belirli bir zaman diliminde
-üreticilerin bir mal veya hizmetten farklı fiyat düzeylerinde satmak istedikleri miktardır." },
-{ term: "Arz Kanunu", def: "Diğer faktörler sabit iken, belli bir zaman diliminde
-bir malın fiyatı ile o maldan üreticilerin satmak istediği miktar arasında aynı yönlü bir
-ilişkinin olmasıdır." },
-{ term: "Piyasa Dengesi", def: "Tüketicilerin bir mal veya hizmetten satın almak
-istediği miktar ile üreticilerin satmak istediği miktarın birbirine eşit olduğu noktadır." },
-{ term: "Kıtlık (Talep Fazlası)", def: "Belli bir fiyat düzeyinde talep edilen
-miktarın arz edilen miktardan daha fazla olduğu durumdur." },
-{ term: "Artık (Arz Fazlası)", def: "Belli bir fiyat düzeyinde arz edilen miktarın
-talep edilen miktardan daha fazla olduğu durumdur." }
-]
-},
-{
-id: 4,
-title: "4. Ünite: Esneklik",
-items: [
-{ term: "Talebin Fiyat Esnekliği", def: "Bir malın talep edilen miktarındaki yüzde
-değişmenin o malın fiyatındaki yüzde değişmeye oranıdır (duyarlılık ölçüsüdür)." },
-{ term: "İnelastik Talep", def: "Esneklik katsayısının 1'den küçük olduğu,
-tüketicilerin fiyat değişimine karşı duyarsız olduğu durumdur." },
-{ term: "Esnek Talep", def: "Esneklik katsayısının 1'den büyük olduğu,
-tüketicilerin fiyattaki değişmeye karşı duyarlı oldukları durumdur." },
-{ term: "Tam İnelastik Talep", def: "Fiyattaki bir değişmenin talep edilen
-miktarda hiçbir değişmeye neden olmadığı (Esneklik = 0) durumdur." },
-{ term: "Tam Esnek Talep", def: "Fiyattaki çok küçük bir değişikliğin talep edilen
-miktarda oldukça büyük (sonsuz) bir değişime neden olduğu durumdur." },
-{ term: "Gelir Esnekliği", def: "Parasal gelirde ortaya çıkan yüzde bir oranındaki
-bir değişiklik sonucu talep miktarında meydana gelen yüzde değişmedir." },
-{ term: "Çapraz Fiyat Talep Esnekliği", def: "Bir malın talep edilen miktarındaki
-yüzde değişmenin ilgili bir başka malın fiyatındaki yüzde değişmeye oranıdır." },
-{ term: "Arz Esnekliği", def: "Bir malın arz edilen miktarındaki yüzde değişimin
-fiyatındaki yüzde değişmeye oranıdır." }
-]
-},
-{
-id: 5,
-title: "5. Ünite: Arz ve Talep Uygulamaları",
-items: [
-{ term: "Taban Fiyat", def: "Hükümetçe belirlenen ve piyasada işlem
-görebilecek en düşük fiyattır (bu fiyatın altında işlem yapılamaz)." },
-{ term: "Tavan Fiyat", def: "Hükümetçe belirlenen ve uygulanacak en yüksek
-fiyattır (denge fiyatının altında belirlenirse bağlayıcıdır)." },
-{ term: "Kota", def: "Belli bir dönem boyunca, ithal edilecek veya üretilecek
-ürün miktarı üzerine bir tavan (sınır) koyulmasıdır." },
-{ term: "Spesifik Vergi", def: "Belli bir miktar üzerinden alınan (örneğin litre
-başına sabit bir tutar) vergilerdir." },
-{ term: "Ad Valorem Vergi", def: "Gelirin veya fiyatın belli bir yüzdesi/oranı
-şeklindeki vergilerdir." },
-{ term: "Tüketici Artığı", def: "Tüketicinin bir mal için ödemeyi arzu ettiği fiyat
-ile gerçekte satın aldığı fiyat arasındaki farktır." },
-{ term: "Üretici Artığı", def: "Üreticilerin her ilave birimi üretmek için kabul
-etmeye hazır oldukları minimum fiyatlarla piyasada oluşan denge fiyatı arasındaki farkların
-toplamıdır." }
-]
-},
-{
-id: 6,
-title: "6. Ünite: Üretim ve Maliyetler",
-items: [
-{ term: "Üretim", def: "İnsan ihtiyaçlarını doğrudan veya dolaylı bir biçimde
-gidermeye yönelik mal ve hizmetleri sunma çabasıdır." },
-{ term: "Üretim Fonksiyonu", def: "Belli bir teknoloji düzeyi dâhilinde, alternatif
-girdi bileşenlerine tekabül eden maksimum çıktı düzeyleri arasındaki teknik ilişkiyi
-gösteren fonksiyondur." },
-{ term: "Sabit Girdiler", def: "Belli bir zaman dilimi için üretilen ürün
-miktarındaki değişime karşın üretim sürecinde kullanılan miktarları değişmeyen girdilerdir."
-},
-{ term: "Değişken Girdiler", def: "Her bir zaman dilimi için üretilen ürün
-miktarındaki değişime karşın üretim sürecinde kullanılan miktarları değişen girdilerdir." },
-{ term: "Toplam Fiziksel Ürün (TPP)", def: "Üretim sürecinde kullanılan değişken
-girdinin farklı miktarları için elde edilen farklı çıktı düzeyleridir." },
-{ term: "Azalan Verimler Kanunu", def: "Diğer üretim faktörleri sabitken, tek bir
-faktör arttırıldığında belli bir düzeyden sonra her ilave birimin toplam üretime sağladığı
-katkının (marjinal verimin) azalması durumudur." },
-{ term: "Marjinal Fiziksel Ürün (MPP)", def: "Değişken girdideki bir birimlik artış
-karşısında toplam fiziksel ürün miktarında meydana gelen değişimdir." },
-{ term: "Ortalama Fiziksel Ürün (APP)", def: "Bir birim değişken girdi başına
-düşen ürün miktarıdır." },
-{ term: "Ölçeğe Göre Getiri", def: "Tüm üretim faktörlerinin aynı oranda
-arttırıldığı durumda toplam Ürün miktarının ne oranda değişeceğini gösteren ölçüttür." },
-{ term: "Marjinal Ürün Hasılası", def: "Bir girdiye ait marjinal fiziksel ürün
-miktarı ile ürünün piyasa fiyatının çarpımı sonucu elde edilen parasal gelirdir." },
-{ term: "Açık Maliyet", def: "Firmanın üretim sürecinde kullanacağı girdiler için
-yaptığı gerçek ödemelerdir." },
-{ term: "Örtük Maliyet", def: "Gerçekte herhangi bir parasal ödeme yapılmayan
-ancak firmanın kendi sahip olduğu kaynakları kullanması nedeniyle ortaya çıkan fırsat
-maliyetidir." },
-{ term: "Değişken Maliyetler", def: "Üretim miktarına bağlı olan ve üretimle
-birlikte değişen maliyetlerdir." },
-{ term: "Sabit Maliyetler", def: "Üretim miktarına bağlı olmayan ve üretimle
-birlikte değişmeyen maliyetlerdir." },
-{ term: "Marjinal Maliyet (MC)", def: "Firmanın üretimini bir birim arttırması
-durumunda toplam maliyet düzeyinde meydana gelen değişimdir." }
-]
-},
-{
-id: 7,
-title: "7. Ünite: Tam Rekabet Piyasası",
-items: [
-{ term: "Tam Rekabet Piyasası", def: "Çok sayıda alıcı ve satıcının olduğu,
-ürünlerin homojen olduğu, piyasaya giriş çıkışın serbest olduğu ve tam bilginin bulunduğu,
-hiçbir firmanın fiyatı etkileyemediği piyasa türüdür." },
-{ term: "Normal (Sıfır Ekonomik) Kâr", def: "Bir endüstride firmaları o
-endüstride kalmak için tatmin edecek kadar yüksek, yeni firmaların girişini teşvik
-etmeyecek kadar düşük olan kârdır (TR=TC durumu)." },
-{ term: "Kısa Dönem Kapanma Fiyatı", def: "Firmanın ortalama değişken
-maliyet (AVC) eğrisinin minimum noktasından geçen piyasa fiyatıdır." },
-{ term: "Uzun Dönem Arz Eğrisi", def: "Tam rekabet piyasasında giriş ve
-çıkışların tamamlandığı çeşitli uzun dönem denge fiyat-miktar kombinasyonlarını gösteren
-eğridir." },
-{ term: "Üretim Etkinliği", def: "Üretimin uzun dönem ortalama maliyet (ATC)
-eğrisinin minimum noktasında gerçekleşmesidir (P=minATC)." },
-{ term: "Tahsis Etkinliği", def: "Herhangi bir piyasadaki kaynakların o piyasadaki
-tüketicilerin memnuniyetini azaltmaksızın bir başka piyasada kullanılmasının olanaksız
-olduğu durumdur (P=MC)." }
-]
-},
-{
-id: 8,
-title: "8. Ünite: Eksik Rekabet Piyasaları",
-items: [
-{ term: "Monopol (Tekel)", def: "Yakın ikamesi olmayan bir malın veya hizmetin
-tek üreticisinin veya sunucusunun olduğu piyasa yapısıdır." },
-{ term: "Farklılaştırılmış Mal", def: "Aynı üretici tarafından bir malın farklı alıcı
-gruplarına farklı fiyat veya kalitelerden satılmasıdır." },
-{ term: "Doğal Monopol", def: "Ölçek ekonomileri sonucunda (maliyet
-avantajıyla) oluşan monopoldür." },
-{ term: "Network (Ağ) Dışsallıkları", def: "Bir birey için mal veya hizmetin
-değerinin, aynı mal veya hizmeti daha çok kişi kullandığında artması durumudur." },
-{ term: "Fiyat Farklılaştırması", def: "Monopolcü firmanın aynı malı farklı tüketici
-gruplarına farklı fiyatlardan satmasıdır." },
-{ term: "Monopolcü Rekabet Piyasası", def: "Farklılaştırılmış ürünlerin üretildiği,
-çok sayıda firmanın bulunduğu, firmaların belli ölçüde fiyat belirleme gücüne sahip olduğu
-ve giriş-çıkışın kolay olduğu piyasadır." },
-{ term: "Oligopol", def: "Farklılaştırılmış veya homojen bir ürünün az sayıda
-ancak büyük ölçekli firmalar tarafından arzının gerçekleştiği, karşılıklı bağımlılığın yüksek
-olduğu piyasalardır." },
-{ term: "Karşılıklı Bağımlılık", def: "Bir firmanın aldığı kararların rakip firmaları,
-rakip firmaların kararlarının da kendisini etkilemesi durumudur (Oligopolün temel
-özelliğidir)." },
-{ term: "Kartel", def: "Firmaların kârlarını arttırmak amacıyla rekabet etmek
-yerine fiyat ve üretim konularında ortak bağlayıcı kararlar almak için oluşturdukları
-organizasyondur." }
-]
-}
-];
-let currentUnitIndex = null;
-let score = 0;
-let answeredCount = 0;
-let totalAnsweredGlobal = 0;
-let totalQuestionsGlobal = 0;
-// --- INIT ---
-function init() {
-// Calculate global totals
-quizData.forEach(unit => {
-totalQuestionsGlobal += unit.items.length;
-});
-updateGlobalProgress();
-renderSidebar();
-}
-// --- RENDER SIDEBAR ---
-function renderSidebar() {
-const list = document.getElementById('unit-list');
-list.innerHTML =
-'';
-quizData.forEach((unit, index) => {
-const btn = document.createElement('button');
-btn.className = `w-full text-left px-4 py-3 rounded-xl mb-2 transition-all
-duration-200 flex items-center justify-between group border border-transparent $
-{currentUnitIndex === index ? 'bg-blue-100 border-blue-200 text-blue-900 shadow-sm' :
-'hover:bg-gray-100 text-gray-700'}`
-;
-btn.innerHTML =
-`
-btn.onclick = () => loadUnit(index);
-<div class="flex items-center gap-3">
-<div class="w-6 h-6 rounded-full ${currentUnitIndex === index ? 'bg-blue-
-600 text-white' : 'bg-gray-200 text-gray-500'} flex items-center justify-center text-xs font-
-bold transition-colors">
-${index + 1}
-</div>
-<div>
-<span class="block text-sm font-semibold">${unit.title.split(':')
-[0]}</span>
-<span class="block text-xs opacity-70 truncate max-w-[150px]">$
-{unit.title.split(':')[1] || ''}</span>
-</div>
-</div>
-<span class="text-xs font-bold bg-white px-2 py-1 rounded-full text-gray-500
-shadow-sm border border-gray-100">${unit.items.length} Soru</span>
-`
-;
-list.appendChild(btn);
-});
-}
-// --- LOAD UNIT ---
-function loadUnit(index) {
-currentUnitIndex = index;
-renderSidebar();
-document.getElementById('welcome-screen').classList.add('hidden');
-document.getElementById('quiz-container').classList.remove('hidden');
-document.getElementById('unit-completed-card').classList.add('hidden');
-// Reset unit state
-score = 0;
-answeredCount = 0;
-updateUnitScore();
-updateUnitProgress(0);
-// Set Title & Stats
-const unit = quizData[index];
-document.getElementById('unit-title').textContent = unit.title;
-document.getElementById('question-count-badge').textContent =
-`$
-{unit.items.length} Soru`;
-// Prepare Next Unit Button logic
-const nextBtn = document.getElementById('next-unit-btn');
-if(index >= quizData.length - 1) {
-nextBtn.innerHTML = 'Başa Dön <i class="fa-solid fa-rotate-left ml-2"></i>';
-nextBtn.onclick = () => loadUnit(0);
-} else {
-nextBtn.innerHTML = 'Sonraki Ünite <i class="fa-solid fa-arrow-right ml-2"></i>';
-nextBtn.onclick = () => loadNextUnit();
-}
-// Generate Questions
-const questionsContainer = document.getElementById('questions-list');
-questionsContainer.innerHTML =
-'';
-// Shuffle questions
-const shuffledItems = [...unit.items].sort(() => 0.5 - Math.random());
-shuffledItems.forEach((item, qIndex) => {
-const qEl = createQuestionCard(item, qIndex, unit.items);
-questionsContainer.appendChild(qEl);
-});
-// Scroll to top of main area
-document.getElementById('main-scroll').scrollTo({ top: 0, behavior: 'smooth' });
-// Close sidebar on mobile
-if (window.innerWidth < 768) {
-toggleSidebar();
-}
-}
-function loadNextUnit() {
-if (currentUnitIndex !== null && currentUnitIndex < quizData.length - 1) {
-loadUnit(currentUnitIndex + 1);
-}
-}
-// --- CREATE QUESTION CARD ---
-function createQuestionCard(correctItem, index, allUnitItems) {
-const card = document.createElement('div');
-card.className = "question-card bg-white p-6 rounded-xl shadow-sm border
-border-gray-100 relative overflow-hidden group";
-card.id = `q-card-${index}`
-;
-// Generate Options (1 Correct + 3 Wrong)
-let options = [correctItem.term];
-const otherItems = allUnitItems.filter(i => i.term !== correctItem.term);
-// Fill with distractors from same unit if possible, else borrow from global
-let pool = [...otherItems];
-if(pool.length < 3) {
-const allOtherUnits = quizData.filter(u => u !==
-quizData[currentUnitIndex]).flatMap(u => u.items);
-pool = pool.concat(allOtherUnits);
-}
-// Shuffle pool, pick 3, combine, shuffle options
-pool.sort(() => 0.5 - Math.random());
-options = options.concat(pool.slice(0, 3).map(i => i.term));
-options.sort(() => 0.5 - Math.random());
-const optionsHtml = options.map((opt, i) =>
-`
-<div class="mb-2 relative">
-<input type="radio" name="q-${index}" id="q-${index}-opt-${i}" value="$
-{opt}" class="option-input hidden peer" onchange="checkAnswer(${index}, '$
-{opt.replace(/'/g, "\\'")}', '${correctItem.term.replace(/'/g, "\\'")}', this)">
-<label for="q-${index}-opt-${i}" class="option-label block w-full p-4 pl-12
-border-2 border-transparent bg-gray-50 rounded-lg text-gray-700 font-medium peer-
-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 hover:bg-
-gray-100 relative transition-all">
-<span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-7 h-7 flex
-items-center justify-center border-2 border-gray-300 rounded-full text-xs font-bold text-
-gray-400 peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white
-transition-all">
-${String.fromCharCode(65 + i)}
-</span>
-${opt}
-</label>
-</div>
-`).join('');
-card.innerHTML =
-`
-<div class="flex items-start gap-4 mb-6">
-<div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center
-justify-center font-bold text-sm shrink-0 mt-1">
-${index + 1}
-</div>
-<p class="text-gray-800 text-lg leading-relaxed font-medium flex-1 pt-1">$
-{correctItem.def}</p>
-</div>
-<div class="space-y-2 mb-4" id="options-container-${index}">
-${optionsHtml}
-</div>
-<div class="flex justify-between items-center pt-4 border-t border-gray-50">
-<button onclick="revealAnswer(${index}, '${correctItem.term.replace(/'/g,
-"\\'")}')" class="text-sm text-blue-500 hover:text-blue-700 font-semibold flex items-center
-gap-2 transition-colors px-3 py-1 rounded hover:bg-blue-50" id="reveal-btn-${index}">
-<i class="fa-regular fa-eye"></i> Cevabı Göster
-</button>
-<div id="feedback-${index}" class="text-sm font-bold min-h-[24px]"></div>
-</div>
-<!-- Confetti Anchor -->
-<div id="confetti-anchor-${index}" class="absolute top-1/2 left-1/2 transform -
-translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-`
-;
-return card;
-}
-// --- LOGIC ---
-function checkAnswer(qIndex, selected, correct, inputEl) {
-const feedbackEl = document.getElementById(`feedback-${qIndex}`);
-const card = document.getElementById(`q-card-${qIndex}`);
-const btn = document.getElementById(`reveal-btn-${qIndex}`);
-const inputs = document.getElementsByName(`q-${qIndex}`);
-const anchor = document.getElementById(`confetti-anchor-${qIndex}`);
-// Lock input
-inputs.forEach(inp => inp.disabled = true);
-btn.disabled = true;
-btn.classList.add('opacity-30', 'cursor-not-allowed');
-btn.classList.remove('hover:bg-blue-50', 'text-blue-500');
-if (selected === correct) {
-feedbackEl.innerHTML = '<span class="text-green-600 flex items-center gap-1
-bg-green-50 px-3 py-1 rounded-full border border-green-200"><i class="fa-solid fa-check-
-circle"></i> Doğru!</span>';
-card.classList.add('ring-2', 'ring-green-400', 'bg-green-50/10');
-score += 10;
-createConfetti(anchor);
-} else {
-feedbackEl.innerHTML = `<span class="text-red-600 flex items-center gap-1 bg-
-red-50 px-3 py-1 rounded-full border border-red-200"><i class="fa-solid fa-times-
-circle"></i> Yanlış</span>`;
-card.classList.add('ring-2', 'ring-red-200');
-// Show Correct
-const labels = card.querySelectorAll('label');
-labels.forEach(lbl => {
-if(lbl.textContent.includes(correct)) {
-lbl.classList.remove('bg-gray-50', 'text-gray-700');
-lbl.classList.add('bg-green-100', 'border-green-400', 'text-green-800', 'border-
-2');
-}
-});
-}
-answeredCount++;
-totalAnsweredGlobal++;
-updateUnitScore();
-updateGlobalProgress();
-updateUnitProgress(answeredCount);
-checkUnitCompletion();
-}
-function revealAnswer(qIndex, correct) {
-const inputs = document.getElementsByName(`q-${qIndex}`);
-const card = document.getElementById(`q-card-${qIndex}`);
-const btn = document.getElementById(`reveal-btn-${qIndex}`);
-const feedbackEl = document.getElementById(`feedback-${qIndex}`);
-inputs.forEach(inp => inp.disabled = true);
-btn.disabled = true;
-btn.classList.add('hidden'); // Hide button after reveal
-feedbackEl.innerHTML = `<span class="text-amber-600 flex items-center gap-1 bg-
-amber-50 px-3 py-1 rounded-full border border-amber-200"><i class="fa-solid fa-info-
-circle"></i> Gösterildi</span>`;
-const labels = card.querySelectorAll('label');
-labels.forEach(lbl => {
-if(lbl.innerText.trim().endsWith(correct) || lbl.innerText.includes(correct)) {
-lbl.classList.remove('bg-gray-50');
-lbl.classList.add('bg-amber-100', 'border-amber-400', 'text-amber-800', 'border-
-2');
-}
-});
-// Count as answered but 0 points? Or just keep it out of scoring logic.
-// Let's count it for progress bar visually but not score.
-answeredCount++;
-updateUnitProgress(answeredCount);
-checkUnitCompletion();
-}
-function checkUnitCompletion() {
-const currentUnitItems = quizData[currentUnitIndex].items.length;
-if (answeredCount === currentUnitItems) {
-const completedCard = document.getElementById('unit-completed-card');
-completedCard.classList.remove('hidden');
-// Scroll to bottom to show it
-setTimeout(() => {
-completedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}, 300);
-}
-}
-function updateUnitScore() {
-document.getElementById('unit-score').textContent = score;
-document.getElementById('completed-count').textContent =
-`${answeredCount}
-çözüldü`;
-}
-function updateUnitProgress(val) {
-const total = quizData[currentUnitIndex].items.length;
-const pct = (val / total) * 100;
-document.getElementById('unit-progress-bar').style.width =
-`${pct}%`;
-}
-function updateGlobalProgress() {
-const pct = Math.round((totalAnsweredGlobal / totalQuestionsGlobal) * 100) || 0;
-document.getElementById('total-progress').textContent = `Genel: %${pct}`
-;
-}
-function toggleSidebar() {
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('sidebar-overlay');
-if (sidebar.classList.contains('-translate-x-full')) {
-sidebar.classList.remove('-translate-x-full');
-overlay.classList.remove('hidden');
-} else {
-sidebar.classList.add('-translate-x-full');
-overlay.classList.add('hidden');
-}
-}
-// --- VISUAL FX ---
-function createConfetti(anchor) {
-for (let i = 0; i < 20; i++) {
-const piece = document.createElement('div');
-piece.className = 'confetti-piece';
-const color = ['#FFD700', '#FF6347', '#32CD32', '#1E90FF']
-[Math.floor(Math.random() * 4)];
-piece.style.backgroundColor = color;
-// Random spread
-const angle = Math.random() * Math.PI * 2;
-const distance = 30 + Math.random() * 50;
-const tx = Math.cos(angle) * distance;
-const ty = Math.sin(angle) * distance;
-piece.style.setProperty('--tx',
-`${tx}px`);
-piece.style.setProperty('--ty',
-`${ty}px`);
-// Manual animation since CSS variables in keyframes are tricky without complex
-setup
-// Using simple inline transition here for direction
-piece.style.transition = 'all 0.5s ease-out';
-piece.style.transform = `translate(0,0) scale(0)`;
-anchor.appendChild(piece);
-// Trigger animation frame
-requestAnimationFrame(() => {
-piece.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
-piece.style.opacity = '0';
-});
-setTimeout(() => piece.remove(), 500);
-}
-}
-// Start
-init();
-</script>
+
+    <!-- Header -->
+    <header class="bg-blue-800 text-white p-4 shadow-lg flex justify-between items-center z-20">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-book-open text-2xl"></i>
+            <h1 class="text-xl font-bold tracking-wide hidden md:block">İktisat Soru Bankası</h1>
+            <h1 class="text-lg font-bold tracking-wide md:hidden">İktisat SB</h1>
+        </div>
+        <div class="text-sm bg-blue-700 px-3 py-1 rounded-full flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span id="total-progress">Genel İlerleme: 0%</span>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        <!-- Sidebar (Units) -->
+        <aside class="w-full md:w-72 bg-white border-r border-gray-200 flex flex-col overflow-y-auto md:relative absolute z-10 h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-xl md:shadow-none" id="sidebar">
+            <div class="p-4 bg-gray-50 border-b border-gray-100 font-semibold text-gray-700 flex justify-between items-center sticky top-0 bg-gray-50 z-10">
+                <span><i class="fa-solid fa-list-ul mr-2"></i>Üniteler</span>
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-500 hover:text-red-500 transition"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <nav class="flex-1 p-2 space-y-1 pb-20" id="unit-list">
+                <!-- Units will be populated here -->
+            </nav>
+        </aside>
+
+        <!-- Overlay for mobile sidebar -->
+        <div onclick="toggleSidebar()" id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-0 hidden md:hidden transition-opacity"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 w-full relative bg-gray-50" id="main-scroll">
+            <button onclick="toggleSidebar()" class="md:hidden mb-4 bg-white p-2 px-4 rounded-lg shadow-sm text-blue-800 font-semibold flex items-center gap-2 border border-blue-100 w-full justify-center">
+                <i class="fa-solid fa-bars"></i> Ünite Listesini Aç
+            </button>
+
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="text-center py-10 max-w-2xl mx-auto mt-10">
+                <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                    <div class="w-24 h-24 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                        <i class="fa-solid fa-graduation-cap text-5xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Hoş Geldiniz!</h2>
+                    <p class="text-gray-600 mb-8 text-lg">
+                        Bu uygulama <strong>8 ünitenin tamamını</strong> ve toplam <strong>75 iktisadi terimi</strong> içerir.
+                        <br><br>
+                        Başlamak için sol menüden bir ünite seçin.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-8 text-left">
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <h3 class="font-bold text-blue-800 mb-1"><i class="fa-solid fa-check-double mr-2"></i>Tam Kapsam</h3>
+                            <p class="text-sm text-blue-600">PDF'teki tüm tanımlar eksiksiz eklendi.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                            <h3 class="font-bold text-green-800 mb-1"><i class="fa-solid fa-rotate mr-2"></i>Anında Dönüt</h3>
+                            <p class="text-sm text-green-600">Doğru/Yanlış cevabı hemen gör.</p>
+                        </div>
+                    </div>
+                    <button onclick="loadUnit(0)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-1">
+                        1. Ünite ile Başla <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Container -->
+            <div id="quiz-container" class="hidden max-w-4xl mx-auto pb-20">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 sticky top-0 z-10 backdrop-blur-md bg-opacity-95">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 id="unit-title" class="text-xl md:text-2xl font-bold text-gray-800">Ünite Başlığı</h2>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-xs font-semibold bg-gray-100 text-gray-600 px-2 py-1 rounded" id="question-count-badge">0 Soru</span>
+                                <span class="text-xs text-gray-500" id="completed-count">0 çözüldü</span>
+                            </div>
+                        </div>
+                        <div class="text-right pl-4 border-l border-gray-100">
+                            <div class="text-3xl font-bold text-blue-600" id="unit-score">0</div>
+                            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">PUAN</div>
+                        </div>
+                    </div>
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-3">
+                        <div id="unit-progress-bar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div id="questions-list" class="space-y-6">
+                    <!-- Questions will be populated here -->
+                </div>
+
+                <!-- Unit Completion Modal (Inline) -->
+                <div id="unit-completed-card" class="hidden bg-white p-8 rounded-2xl shadow-xl text-center border-t-4 border-green-500 mt-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-trophy text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Ünite Tamamlandı!</h3>
+                    <p class="text-gray-600 mb-6">Bu ünitedeki tüm soruları tamamladınız.</p>
+                    <div class="flex justify-center gap-4">
+                        <button onclick="loadUnit(currentUnitIndex)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg transition">
+                            <i class="fa-solid fa-rotate-right mr-2"></i>Tekrar Çöz
+                        </button>
+                        <button onclick="loadNextUnit()" id="next-unit-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition shadow-lg hover:shadow-green-500/30">
+                            Sonraki Ünite <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- DATA ---
+        // PDF kaynaklı tam liste. (Toplam 75 Tanım)
+        const quizData = [
+            {
+                id: 1,
+                title: "1. Ünite: İktisadı Neden Öğrenmeliyiz?",
+                items: [
+                    { term: "İktisat", def: "Kıtlık koşulları altında yapılan tercihlerin incelenmesidir." },
+                    { term: "Kıtlık", def: "Bir şeyin mevcut miktarının arzulanan miktarı karşılamakta yetersiz kaldığı durumdur." },
+                    { term: "Kaynaklar", def: "İhtiyaçlarımızı karşılayacak mal ve hizmetlerin üretilmesinde kullanılan şeylerdir (İş gücü, sermaye ve toprak)." },
+                    { term: "Mal", def: "Üretiminde kıt kaynakların kullanıldığı, insan ihtiyaçlarını karşılama özelliğine sahip fiziki varlığı olan ürünlerdir." },
+                    { term: "Hizmet", def: "Üretiminde kıt kaynakların kullanıldığı, insan ihtiyaçlarını karşılama özelliğine sahip fiziki varlığı olmayan ürünlerdir." },
+                    { term: "Serbest Mal", def: "Doğada her istendiğinde bulunabilen ve bedel ödemeden elde edilebilen mallardır." },
+                    { term: "Rasyonel Davranış", def: "Tercih yapmak veya karar almak durumunda olan bir iktisadi birimin kendi hedefine uygun biçimde hareket etmesidir." },
+                    { term: "Marjinal Analiz", def: "Mevcut koşullar değiştiği zaman ne olacağının incelenmesidir." },
+                    { term: "Diğer Şartlar Sabitken (Ceteris Paribus)", def: "Bir iktisadi olguyu etkileyen çok sayıda faktörden sadece bir tanesinin değiştiği, diğer faktörlerin ise değişmediği varsayımıdır." },
+                    { term: "Mikro İktisat", def: "İktisadın insan davranışı ve insanların piyasa, endüstri, firma ve birey gibi nispeten küçük birimlerle ilişkili tercihlerini inceleyen bölümüdür." },
+                    { term: "Makro İktisat", def: "İktisadın, bir bütün olarak ekonomiyi ve toplulaştırılmış ekonomik davranışı inceleyen bölümüdür." },
+                    { term: "Pozitif İktisat", def: "İktisadın ne olduğunu belirlemeye çalışan ve değer yargısı içermeyen bölümüdür." },
+                    { term: "Normatif İktisat", def: "Toplumsal refahın en üst düzeyde sağlanabilmesi için ne olması gerektiğini inceleyen, değer yargılarını yansıtan bölümdür." }
+                ]
+            },
+            {
+                id: 2,
+                title: "2. Ünite: Kıtlık, Tercih ve Fayda",
+                items: [
+                    { term: "Fırsat (Alternatif) Maliyeti", def: "Bir kararı uygularken vazgeçilen karar, yani bir tercih için vazgeçmek zorunda kalınan en değerli alternatiftir." },
+                    { term: "Üretim İmkânları Sınırı", def: "Mevcut üretim faktörleri ve üretim teknolojisi veri iken belirli bir dönemde ekonominin maksimum düzeyde üretilebileceği çeşitli çıktı (ürün) bileşimlerini gösteren eğridir." },
+                    { term: "Marjinal Dönüşüm Oranı", def: "Bir maldan bir birim daha fazla üretmek için öteki maldan ne kadar fedakarlık etmek gerektiğini gösteren orandır (fırsat maliyetini ölçer)." },
+                    { term: "Piyasa Ekonomisi", def: "Neyin, nasıl ve kimler için üretileceği konusunun birbirlerinden bağımsız bireysel tüketiciler, üreticiler ve diğer organizasyonların kararlarına bağlı olduğu sistemdir." },
+                    { term: "Kumanda Ekonomileri", def: "Temel ekonomik sorulara ilişkin kararların merkezi otorite tarafından alındığı sistemdir." },
+                    { term: "Fayda", def: "Bireyin tüketilen mal ve hizmetten elde edeceği memnuniyettir." },
+                    { term: "Toplam Fayda", def: "Belirli bir zaman diliminde, bireyin diğer mal ve hizmetlerden olan tüketimi sabit iken, bir malın çeşitli miktarlarının tüketilmesi sonucu ulaşılan tatmin düzeyidir." },
+                    { term: "Marjinal Fayda", def: "Belirli bir zaman diliminde bir maldan, bir birim daha fazla tüketilmesi sonucunda ortaya çıkan toplam faydadaki değişmedir." }
+                ]
+            },
+            {
+                id: 3,
+                title: "3. Ünite: Arz ve Talep",
+                items: [
+                    { term: "Talep", def: "Diğer faktörler sabit iken belirli bir zaman diliminde tüketicilerin bir mal veya hizmetten farklı fiyat düzeylerinde satın almak istedikleri miktardır." },
+                    { term: "Talep Kanunu", def: "Diğer faktörler sabit iken, belli bir zaman diliminde bir malın fiyatı ile o maldan tüketicilerin satın almak istediği miktar arasında ters yönlü bir ilişki olmasıdır." },
+                    { term: "İkame Etkisi", def: "Diğer faktörler sabitken bir malın fiyatı arttığında tüketicinin fiyatı artan bu malın yerine göreceli olarak daha ucuz olan diğer malı tercih etmesidir." },
+                    { term: "Gelir Etkisi", def: "Diğer faktörler sabitken, bir malın fiyatının artması neticesinde tüketicinin reel gelirinin (satın alma gücünün) azalması durumudur." },
+                    { term: "Arz", def: "Diğer faktörler sabit iken belirli bir zaman diliminde üreticilerin bir mal veya hizmetten farklı fiyat düzeylerinde satmak istedikleri miktardır." },
+                    { term: "Arz Kanunu", def: "Diğer faktörler sabit iken, belli bir zaman diliminde bir malın fiyatı ile o maldan üreticilerin satmak istediği miktar arasında aynı yönlü bir ilişkinin olmasıdır." },
+                    { term: "Piyasa Dengesi", def: "Tüketicilerin bir mal veya hizmetten satın almak istediği miktar ile üreticilerin satmak istediği miktarın birbirine eşit olduğu noktadır." },
+                    { term: "Kıtlık (Talep Fazlası)", def: "Belli bir fiyat düzeyinde talep edilen miktarın arz edilen miktardan daha fazla olduğu durumdur." },
+                    { term: "Artık (Arz Fazlası)", def: "Belli bir fiyat düzeyinde arz edilen miktarın talep edilen miktardan daha fazla olduğu durumdur." }
+                ]
+            },
+            {
+                id: 4,
+                title: "4. Ünite: Esneklik",
+                items: [
+                    { term: "Talebin Fiyat Esnekliği", def: "Bir malın talep edilen miktarındaki yüzde değişmenin o malın fiyatındaki yüzde değişmeye oranıdır (duyarlılık ölçüsüdür)." },
+                    { term: "İnelastik Talep", def: "Esneklik katsayısının 1'den küçük olduğu, tüketicilerin fiyat değişimine karşı duyarsız olduğu durumdur." },
+                    { term: "Esnek Talep", def: "Esneklik katsayısının 1'den büyük olduğu, tüketicilerin fiyattaki değişmeye karşı duyarlı oldukları durumdur." },
+                    { term: "Tam İnelastik Talep", def: "Fiyattaki bir değişmenin talep edilen miktarda hiçbir değişmeye neden olmadığı (Esneklik = 0) durumdur." },
+                    { term: "Tam Esnek Talep", def: "Fiyattaki çok küçük bir değişikliğin talep edilen miktarda oldukça büyük (sonsuz) bir değişime neden olduğu durumdur." },
+                    { term: "Gelir Esnekliği", def: "Parasal gelirde ortaya çıkan yüzde bir oranındaki bir değişiklik sonucu talep miktarında meydana gelen yüzde değişmedir." },
+                    { term: "Çapraz Fiyat Talep Esnekliği", def: "Bir malın talep edilen miktarındaki yüzde değişmenin ilgili bir başka malın fiyatındaki yüzde değişmeye oranıdır." },
+                    { term: "Arz Esnekliği", def: "Bir malın arz edilen miktarındaki yüzde değişimin fiyatındaki yüzde değişmeye oranıdır." }
+                ]
+            },
+            {
+                id: 5,
+                title: "5. Ünite: Arz ve Talep Uygulamaları",
+                items: [
+                    { term: "Taban Fiyat", def: "Hükümetçe belirlenen ve piyasada işlem görebilecek en düşük fiyattır (bu fiyatın altında işlem yapılamaz)." },
+                    { term: "Tavan Fiyat", def: "Hükümetçe belirlenen ve uygulanacak en yüksek fiyattır (denge fiyatının altında belirlenirse bağlayıcıdır)." },
+                    { term: "Kota", def: "Belli bir dönem boyunca, ithal edilecek veya üretilecek ürün miktarı üzerine bir tavan (sınır) koyulmasıdır." },
+                    { term: "Spesifik Vergi", def: "Belli bir miktar üzerinden alınan (örneğin litre başına sabit bir tutar) vergilerdir." },
+                    { term: "Ad Valorem Vergi", def: "Gelirin veya fiyatın belli bir yüzdesi/oranı şeklindeki vergilerdir." },
+                    { term: "Tüketici Artığı", def: "Tüketicinin bir mal için ödemeyi arzu ettiği fiyat ile gerçekte satın aldığı fiyat arasındaki farktır." },
+                    { term: "Üretici Artığı", def: "Üreticilerin her ilave birimi üretmek için kabul etmeye hazır oldukları minimum fiyatlarla piyasada oluşan denge fiyatı arasındaki farkların toplamıdır." }
+                ]
+            },
+            {
+                id: 6,
+                title: "6. Ünite: Üretim ve Maliyetler",
+                items: [
+                    { term: "Üretim", def: "İnsan ihtiyaçlarını doğrudan veya dolaylı bir biçimde gidermeye yönelik mal ve hizmetleri sunma çabasıdır." },
+                    { term: "Üretim Fonksiyonu", def: "Belli bir teknoloji düzeyi dâhilinde, alternatif girdi bileşenlerine tekabül eden maksimum çıktı düzeyleri arasındaki teknik ilişkiyi gösteren fonksiyondur." },
+                    { term: "Sabit Girdiler", def: "Belli bir zaman dilimi için üretilen ürün miktarındaki değişime karşın üretim sürecinde kullanılan miktarları değişmeyen girdilerdir." },
+                    { term: "Değişken Girdiler", def: "Her bir zaman dilimi için üretilen ürün miktarındaki değişime karşın üretim sürecinde kullanılan miktarları değişen girdilerdir." },
+                    { term: "Toplam Fiziksel Ürün (TPP)", def: "Üretim sürecinde kullanılan değişken girdinin farklı miktarları için elde edilen farklı çıktı düzeyleridir." },
+                    { term: "Azalan Verimler Kanunu", def: "Diğer üretim faktörleri sabitken, tek bir faktör arttırıldığında belli bir düzeyden sonra her ilave birimin toplam üretime sağladığı katkının (marjinal verimin) azalması durumudur." },
+                    { term: "Marjinal Fiziksel Ürün (MPP)", def: "Değişken girdideki bir birimlik artış karşısında toplam fiziksel ürün miktarında meydana gelen değişimdir." },
+                    { term: "Ortalama Fiziksel Ürün (APP)", def: "Bir birim değişken girdi başına düşen ürün miktarıdır." },
+                    { term: "Ölçeğe Göre Getiri", def: "Tüm üretim faktörlerinin aynı oranda arttırıldığı durumda toplam Ürün miktarının ne oranda değişeceğini gösteren ölçüttür." },
+                    { term: "Marjinal Ürün Hasılası", def: "Bir girdiye ait marjinal fiziksel ürün miktarı ile ürünün piyasa fiyatının çarpımı sonucu elde edilen parasal gelirdir." },
+                    { term: "Açık Maliyet", def: "Firmanın üretim sürecinde kullanacağı girdiler için yaptığı gerçek ödemelerdir." },
+                    { term: "Örtük Maliyet", def: "Gerçekte herhangi bir parasal ödeme yapılmayan ancak firmanın kendi sahip olduğu kaynakları kullanması nedeniyle ortaya çıkan fırsat maliyetidir." },
+                    { term: "Değişken Maliyetler", def: "Üretim miktarına bağlı olan ve üretimle birlikte değişen maliyetlerdir." },
+                    { term: "Sabit Maliyetler", def: "Üretim miktarına bağlı olmayan ve üretimle birlikte değişmeyen maliyetlerdir." },
+                    { term: "Marjinal Maliyet (MC)", def: "Firmanın üretimini bir birim arttırması durumunda toplam maliyet düzeyinde meydana gelen değişimdir." }
+                ]
+            },
+            {
+                id: 7,
+                title: "7. Ünite: Tam Rekabet Piyasası",
+                items: [
+                    { term: "Tam Rekabet Piyasası", def: "Çok sayıda alıcı ve satıcının olduğu, ürünlerin homojen olduğu, piyasaya giriş çıkışın serbest olduğu ve tam bilginin bulunduğu, hiçbir firmanın fiyatı etkileyemediği piyasa türüdür." },
+                    { term: "Normal (Sıfır Ekonomik) Kâr", def: "Bir endüstride firmaları o endüstride kalmak için tatmin edecek kadar yüksek, yeni firmaların girişini teşvik etmeyecek kadar düşük olan kârdır (TR=TC durumu)." },
+                    { term: "Kısa Dönem Kapanma Fiyatı", def: "Firmanın ortalama değişken maliyet (AVC) eğrisinin minimum noktasından geçen piyasa fiyatıdır." },
+                    { term: "Uzun Dönem Arz Eğrisi", def: "Tam rekabet piyasasında giriş ve çıkışların tamamlandığı çeşitli uzun dönem denge fiyat-miktar kombinasyonlarını gösteren eğridir." },
+                    { term: "Üretim Etkinliği", def: "Üretimin uzun dönem ortalama maliyet (ATC) eğrisinin minimum noktasında gerçekleşmesidir (P=minATC)." },
+                    { term: "Tahsis Etkinliği", def: "Herhangi bir piyasadaki kaynakların o piyasadaki tüketicilerin memnuniyetini azaltmaksızın bir başka piyasada kullanılmasının olanaksız olduğu durumdur (P=MC)." }
+                ]
+            },
+            {
+                id: 8,
+                title: "8. Ünite: Eksik Rekabet Piyasaları",
+                items: [
+                    { term: "Monopol (Tekel)", def: "Yakın ikamesi olmayan bir malın veya hizmetin tek üreticisinin veya sunucusunun olduğu piyasa yapısıdır." },
+                    { term: "Farklılaştırılmış Mal", def: "Aynı üretici tarafından bir malın farklı alıcı gruplarına farklı fiyat veya kalitelerden satılmasıdır." },
+                    { term: "Doğal Monopol", def: "Ölçek ekonomileri sonucunda (maliyet avantajıyla) oluşan monopoldür." },
+                    { term: "Network (Ağ) Dışsallıkları", def: "Bir birey için mal veya hizmetin değerinin, aynı mal veya hizmeti daha çok kişi kullandığında artması durumudur." },
+                    { term: "Fiyat Farklılaştırması", def: "Monopolcü firmanın aynı malı farklı tüketici gruplarına farklı fiyatlardan satmasıdır." },
+                    { term: "Monopolcü Rekabet Piyasası", def: "Farklılaştırılmış ürünlerin üretildiği, çok sayıda firmanın bulunduğu, firmaların belli ölçüde fiyat belirleme gücüne sahip olduğu ve giriş-çıkışın kolay olduğu piyasadır." },
+                    { term: "Oligopol", def: "Farklılaştırılmış veya homojen bir ürünün az sayıda ancak büyük ölçekli firmalar tarafından arzının gerçekleştiği, karşılıklı bağımlılığın yüksek olduğu piyasalardır." },
+                    { term: "Karşılıklı Bağımlılık", def: "Bir firmanın aldığı kararların rakip firmaları, rakip firmaların kararlarının da kendisini etkilemesi durumudur (Oligopolün temel özelliğidir)." },
+                    { term: "Kartel", def: "Firmaların kârlarını arttırmak amacıyla rekabet etmek yerine fiyat ve üretim konularında ortak bağlayıcı kararlar almak için oluşturdukları organizasyondur." }
+                ]
+            }
+        ];
+
+        let currentUnitIndex = null;
+        let score = 0;
+        let answeredCount = 0;
+        let totalAnsweredGlobal = 0;
+        let totalQuestionsGlobal = 0;
+
+        // --- INIT ---
+        function init() {
+            // Calculate global totals
+            quizData.forEach(unit => {
+                totalQuestionsGlobal += unit.items.length;
+            });
+            updateGlobalProgress();
+            renderSidebar();
+        }
+
+        // --- RENDER SIDEBAR ---
+        function renderSidebar() {
+            const list = document.getElementById('unit-list');
+            list.innerHTML = '';
+            quizData.forEach((unit, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left px-4 py-3 rounded-xl mb-2 transition-all duration-200 flex items-center justify-between group border border-transparent ${currentUnitIndex === index ? 'bg-blue-100 border-blue-200 text-blue-900 shadow-sm' : 'hover:bg-gray-100 text-gray-700'}`;
+                btn.onclick = () => loadUnit(index);
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-full ${currentUnitIndex === index ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'} flex items-center justify-center text-xs font-bold transition-colors">
+                            ${index + 1}
+                        </div>
+                        <div>
+                            <span class="block text-sm font-semibold">${unit.title.split(':')[0]}</span>
+                            <span class="block text-xs opacity-70 truncate max-w-[150px]">${unit.title.split(':')[1] || ''}</span>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold bg-white px-2 py-1 rounded-full text-gray-500 shadow-sm border border-gray-100">${unit.items.length} Soru</span>
+                `;
+                list.appendChild(btn);
+            });
+        }
+
+        // --- LOAD UNIT ---
+        function loadUnit(index) {
+            currentUnitIndex = index;
+            renderSidebar();
+            
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('unit-completed-card').classList.add('hidden');
+            
+            // Reset unit state
+            score = 0;
+            answeredCount = 0;
+            updateUnitScore();
+            updateUnitProgress(0);
+
+            // Set Title & Stats
+            const unit = quizData[index];
+            document.getElementById('unit-title').textContent = unit.title;
+            document.getElementById('question-count-badge').textContent = `${unit.items.length} Soru`;
+
+            // Prepare Next Unit Button logic
+            const nextBtn = document.getElementById('next-unit-btn');
+            if(index >= quizData.length - 1) {
+                nextBtn.innerHTML = 'Başa Dön <i class="fa-solid fa-rotate-left ml-2"></i>';
+                nextBtn.onclick = () => loadUnit(0);
+            } else {
+                nextBtn.innerHTML = 'Sonraki Ünite <i class="fa-solid fa-arrow-right ml-2"></i>';
+                nextBtn.onclick = () => loadNextUnit();
+            }
+
+            // Generate Questions
+            const questionsContainer = document.getElementById('questions-list');
+            questionsContainer.innerHTML = '';
+
+            // Shuffle questions
+            const shuffledItems = [...unit.items].sort(() => 0.5 - Math.random());
+
+            shuffledItems.forEach((item, qIndex) => {
+                const qEl = createQuestionCard(item, qIndex, unit.items);
+                questionsContainer.appendChild(qEl);
+            });
+
+            // Scroll to top of main area
+            document.getElementById('main-scroll').scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Close sidebar on mobile
+            if (window.innerWidth < 768) {
+                toggleSidebar();
+            }
+        }
+
+        function loadNextUnit() {
+             if (currentUnitIndex !== null && currentUnitIndex < quizData.length - 1) {
+                loadUnit(currentUnitIndex + 1);
+            }
+        }
+
+        // --- CREATE QUESTION CARD ---
+        function createQuestionCard(correctItem, index, allUnitItems) {
+            const card = document.createElement('div');
+            card.className = "question-card bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden group";
+            card.id = `q-card-${index}`;
+
+            // Generate Options (1 Correct + 3 Wrong)
+            let options = [correctItem.term];
+            const otherItems = allUnitItems.filter(i => i.term !== correctItem.term);
+            
+            // Fill with distractors from same unit if possible, else borrow from global
+            let pool = [...otherItems];
+            if(pool.length < 3) {
+                 const allOtherUnits = quizData.filter(u => u !== quizData[currentUnitIndex]).flatMap(u => u.items);
+                 pool = pool.concat(allOtherUnits);
+            }
+
+            // Shuffle pool, pick 3, combine, shuffle options
+            pool.sort(() => 0.5 - Math.random());
+            options = options.concat(pool.slice(0, 3).map(i => i.term));
+            options.sort(() => 0.5 - Math.random());
+
+            const optionsHtml = options.map((opt, i) => `
+                <div class="mb-2 relative">
+                    <input type="radio" name="q-${index}" id="q-${index}-opt-${i}" value="${opt}" class="option-input hidden peer" onchange="checkAnswer(${index}, '${opt.replace(/'/g, "\\'")}', '${correctItem.term.replace(/'/g, "\\'")}', this)">
+                    <label for="q-${index}-opt-${i}" class="option-label block w-full p-4 pl-12 border-2 border-transparent bg-gray-50 rounded-lg text-gray-700 font-medium peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 hover:bg-gray-100 relative transition-all">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 w-7 h-7 flex items-center justify-center border-2 border-gray-300 rounded-full text-xs font-bold text-gray-400 peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white transition-all">
+                            ${String.fromCharCode(65 + i)}
+                        </span>
+                        ${opt}
+                    </label>
+                </div>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 mt-1">
+                        ${index + 1}
+                    </div>
+                    <p class="text-gray-800 text-lg leading-relaxed font-medium flex-1 pt-1">${correctItem.def}</p>
+                </div>
+                
+                <div class="space-y-2 mb-4" id="options-container-${index}">
+                    ${optionsHtml}
+                </div>
+
+                <div class="flex justify-between items-center pt-4 border-t border-gray-50">
+                    <button onclick="revealAnswer(${index}, '${correctItem.term.replace(/'/g, "\\'")}')" class="text-sm text-blue-500 hover:text-blue-700 font-semibold flex items-center gap-2 transition-colors px-3 py-1 rounded hover:bg-blue-50" id="reveal-btn-${index}">
+                        <i class="fa-regular fa-eye"></i> Cevabı Göster
+                    </button>
+                    <div id="feedback-${index}" class="text-sm font-bold min-h-[24px]"></div>
+                </div>
+                
+                <!-- Confetti Anchor -->
+                <div id="confetti-anchor-${index}" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+            `;
+            return card;
+        }
+
+        // --- LOGIC ---
+
+        function checkAnswer(qIndex, selected, correct, inputEl) {
+            const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+            const card = document.getElementById(`q-card-${qIndex}`);
+            const btn = document.getElementById(`reveal-btn-${qIndex}`);
+            const inputs = document.getElementsByName(`q-${qIndex}`);
+            const anchor = document.getElementById(`confetti-anchor-${qIndex}`);
+
+            // Lock input
+            inputs.forEach(inp => inp.disabled = true);
+            btn.disabled = true;
+            btn.classList.add('opacity-30', 'cursor-not-allowed');
+            btn.classList.remove('hover:bg-blue-50', 'text-blue-500');
+
+            if (selected === correct) {
+                feedbackEl.innerHTML = '<span class="text-green-600 flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full border border-green-200"><i class="fa-solid fa-check-circle"></i> Doğru!</span>';
+                card.classList.add('ring-2', 'ring-green-400', 'bg-green-50/10');
+                score += 10;
+                createConfetti(anchor);
+            } else {
+                feedbackEl.innerHTML = `<span class="text-red-600 flex items-center gap-1 bg-red-50 px-3 py-1 rounded-full border border-red-200"><i class="fa-solid fa-times-circle"></i> Yanlış</span>`;
+                card.classList.add('ring-2', 'ring-red-200');
+                
+                // Show Correct
+                const labels = card.querySelectorAll('label');
+                labels.forEach(lbl => {
+                    if(lbl.textContent.includes(correct)) {
+                        lbl.classList.remove('bg-gray-50', 'text-gray-700');
+                        lbl.classList.add('bg-green-100', 'border-green-400', 'text-green-800', 'border-2');
+                    }
+                });
+            }
+            
+            answeredCount++;
+            totalAnsweredGlobal++;
+            updateUnitScore();
+            updateGlobalProgress();
+            updateUnitProgress(answeredCount);
+            
+            checkUnitCompletion();
+        }
+
+        function revealAnswer(qIndex, correct) {
+            const inputs = document.getElementsByName(`q-${qIndex}`);
+            const card = document.getElementById(`q-card-${qIndex}`);
+            const btn = document.getElementById(`reveal-btn-${qIndex}`);
+            const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+
+            inputs.forEach(inp => inp.disabled = true);
+            btn.disabled = true;
+            btn.classList.add('hidden'); // Hide button after reveal
+
+            feedbackEl.innerHTML = `<span class="text-amber-600 flex items-center gap-1 bg-amber-50 px-3 py-1 rounded-full border border-amber-200"><i class="fa-solid fa-info-circle"></i> Gösterildi</span>`;
+
+            const labels = card.querySelectorAll('label');
+            labels.forEach(lbl => {
+                if(lbl.innerText.trim().endsWith(correct) || lbl.innerText.includes(correct)) {
+                     lbl.classList.remove('bg-gray-50');
+                     lbl.classList.add('bg-amber-100', 'border-amber-400', 'text-amber-800', 'border-2');
+                }
+            });
+
+            // Count as answered but 0 points? Or just keep it out of scoring logic. 
+            // Let's count it for progress bar visually but not score.
+            answeredCount++;
+            updateUnitProgress(answeredCount);
+            checkUnitCompletion();
+        }
+
+        function checkUnitCompletion() {
+            const currentUnitItems = quizData[currentUnitIndex].items.length;
+            if (answeredCount === currentUnitItems) {
+                const completedCard = document.getElementById('unit-completed-card');
+                completedCard.classList.remove('hidden');
+                // Scroll to bottom to show it
+                setTimeout(() => {
+                    completedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+        }
+
+        function updateUnitScore() {
+            document.getElementById('unit-score').textContent = score;
+            document.getElementById('completed-count').textContent = `${answeredCount} çözüldü`;
+        }
+        
+        function updateUnitProgress(val) {
+             const total = quizData[currentUnitIndex].items.length;
+             const pct = (val / total) * 100;
+             document.getElementById('unit-progress-bar').style.width = `${pct}%`;
+        }
+
+        function updateGlobalProgress() {
+            const pct = Math.round((totalAnsweredGlobal / totalQuestionsGlobal) * 100) || 0;
+            document.getElementById('total-progress').textContent = `Genel: %${pct}`;
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // --- VISUAL FX ---
+        function createConfetti(anchor) {
+            for (let i = 0; i < 20; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                const color = ['#FFD700', '#FF6347', '#32CD32', '#1E90FF'][Math.floor(Math.random() * 4)];
+                piece.style.backgroundColor = color;
+                
+                // Random spread
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 30 + Math.random() * 50;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                piece.style.setProperty('--tx', `${tx}px`);
+                piece.style.setProperty('--ty', `${ty}px`);
+                
+                // Manual animation since CSS variables in keyframes are tricky without complex setup
+                // Using simple inline transition here for direction
+                piece.style.transition = 'all 0.5s ease-out';
+                piece.style.transform = `translate(0,0) scale(0)`;
+                
+                anchor.appendChild(piece);
+                
+                // Trigger animation frame
+                requestAnimationFrame(() => {
+                    piece.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
+                    piece.style.opacity = '0';
+                });
+
+                setTimeout(() => piece.remove(), 500);
+            }
+        }
+
+        // Start
+        init();
+
+    </script>
 </body>
 </html>
