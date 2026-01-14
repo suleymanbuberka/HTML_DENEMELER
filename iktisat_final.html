@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İktisadi Düşünceler Tarihi - Soru Bankası</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .option-btn { transition: all 0.2s; }
+        .correct-answer { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; }
+        .wrong-answer { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        .disabled-option { opacity: 0.7; cursor: not-allowed; pointer-events: none; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen pb-20">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-10 border-b border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-book-open text-blue-600"></i>
+                <span class="hidden md:inline">İktisadi Düşünceler Tarihi</span>
+                <span class="md:hidden">İDT Soru Bankası</span>
+            </h1>
+            <div class="flex gap-2">
+                <select id="testSelector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2">
+                    <option value="test1">Dönem Sonu Deneme 1</option>
+                    <option value="test2">Dönem Sonu Deneme 2</option>
+                    <option value="test6">Dönem Sonu Deneme 3</option>
+                    <option value="test7">Dönem Sonu Deneme 4 (Yeni)</option>
+                    <option value="test3">2024-2025 Güz Dönem Sonu</option>
+                    <option value="test4">2025-2026 Güz Ara Sınav</option>
+                    <option value="test5">2024-2025 Güz Ara Sınav</option>
+                </select>
+                <button onclick="resetTest()" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors" title="Testi Sıfırla">
+                    <i class="fas fa-redo-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-6">
+        <div id="quiz-container" class="space-y-6">
+            <!-- Questions will be injected here -->
+        </div>
+    </main>
+
+    <!-- Footer Stats -->
+    <footer class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-20">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 text-green-600 font-bold">
+                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span id="score-correct" class="text-xl">0</span>
+                </div>
+                <div class="flex items-center gap-2 text-red-600 font-bold">
+                    <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <span id="score-wrong" class="text-xl">0</span>
+                </div>
+            </div>
+            <div class="text-sm text-gray-500 font-medium">
+                <span id="progress-text">0/20</span> Soru
+            </div>
+        </div>
+    </footer>
+
+<script>
+// Data extracted from PDF files
+const tests = {
+    test1: [
+        {
+            id: 1,
+            question: "İnsanlığın ekonomik alanda gerçekleştirdiği ve gerçekleştikten sonraki nesillerin hayatlarını yüzyıllarca etkileyen iki ekonomik devrim aşağıdakilerden hangisinde doğru verilmiştir?",
+            options: ["Eğitim ve sanayi devrimi", "Eğitim ve tarım devrimi", "Askeri ve sanayi devrim", "Askeri ve tıbbi devrim", "Tarım ve sanayi devrimi"],
+            answer: 4,
+            explanation: "İnsanlığın ekonomik alanda gerçekleştirdiği ve gerçekleştikten sonraki nesillerin hayatlarını yüzyıllarca etkileyen iki ekonomik devrim vardır: Tarım devrimi ve sanayi devrimi."
+        },
+        {
+            id: 2,
+            question: "19. y.y.'ın ortalarından itibaren Avrupa ile Kuzey Amerika genelinde sanayi şehirlerinin gelişimi aşağıdakilerden hangisi ile başlamıştır?",
+            options: ["Su gücünün kullanılmaya başlanması", "Elektriğin keşfi", "Buhar makinelerinin ortaya çıkması", "Arz-talep dengesinin kurulması", "Kırsaldan kente göç edenlerin istihdam ihtiyacı"],
+            answer: 2,
+            explanation: "Buhar makinesinin ortaya çıkışı sayesinde endüstrinin akan suya olana bağımlılığı sona erdi ve Avrupa ile Kuzey Amerika genelinde sanayi şehirlerinin gelişimi mümkün hale geldi."
+        },
+        {
+            id: 3,
+            question: "Tüketici rantı ne demektir?",
+            options: ["Bir malın kalitesinin tüketicilere sunduğu parasal avantajlar", "Bir malın fiyatının tüketicilere sunduğu parasal avantajlar", "Bir malın üreticisinin tüketicilere sunduğu parasal avantajlar", "Bir malın çok bulunur olmasının tüketicilere sunduğu parasal avantajlar", "Bir malın üretildiği yerin tüketicilere sunduğu parasal avantajlar"],
+            answer: 1,
+            explanation: "Bu piyasanın koşullarının getirdiği en önemli sonuçlarından birisi de 'her malın tek fiyatı'nın olmasıdır ki, bu da, tüketicilere bazı parasal avantajlar sunabilmektedir. Söz konusu parasal avantajlara tüketici rantı adı verilmektedir."
+        },
+        {
+            id: 4,
+            question: "Orta Çağ iktisadi düşüncesi hangi faktör tarafından büyük ölçüde şekillenmiştir?",
+            options: ["Kilise ve dini inançların etkisi", "Ticaretin serbestleştirilmesi", "Eğitimde laikleşme sürecinin başlaması", "Matbaa kullanımının yaygınlaşması", "Liberal ekonomik düzenin benimsenmesi"],
+            answer: 0,
+            explanation: "Orta Çağ Avrupa'sında iktisadi düşünce, toplumsal ve ekonomik yapının din ve kilise tarafından belirlendiği bir dönemde gelişmiştir. Kilise, toplumun ekonomik faaliyetlerini kontrol etmek için çeşitli yasalar ve düzenlemeler çıkarmıştır."
+        },
+        {
+            id: 5,
+            question: "Skolastik düşüncenin en önemli kişisi .................... dir. Yukarıdaki cümlede boş bırakılan alana aşağıdaki kişilerden hangisi getirilmelidir?",
+            options: ["St. Thomas d' Aquin", "Karl Poper", "John Nelson Darby", "Max Weber", "Martin Luther"],
+            answer: 0,
+            explanation: "Skolastik düşüncenin en önemli kişisi St. Thomas d'Aquin dir."
+        },
+        {
+            id: 6,
+            question: "Her iki ülkede de aynı miktar emek kullanılsa bile işçilerin verimlilik farklılığı nedeniyle çıktıda bir farklılık oluşabileceği görüşü aşağıdaki hangi iktisatçıya aittir?",
+            options: ["John Stuart Mill", "Richard Nelson", "Robert Barro", "Ducan Black", "John Locke"],
+            answer: 0,
+            explanation: "Ricardo bu analizinde her iki ülkedeki emek miktarının verimliliğini eşit kabul ediyordu. Oysa Mill'e göre her iki ülkede de aynı miktar emek kullanılsa bile işçilerin verimlilik farklılığı nedeniyle çıktıda bir farklılık oluşabilirdi."
+        },
+        {
+            id: 7,
+            question: "I. Bu çağın iktisat düşüncesi, Kilise'nin iktisadi politikaları belirleme gücüne sahip olduğu bir dönemde geliştiği için, dinin ekonomik faaliyetler üzerindeki etkisi büyük olmuştur<br>II. Hıristiyanlığın etkisi ile adil fiyat, adil ücret, faiz, gibi kavramlar tartışılmış, skolastik düşünce, bu dönemde dinsel ve felsefi bir düşünce olarak ortaya çıkmıştır.<br><br>Başlıca iktisadi nitelikleri yukarıda ifade edilen çağ hangisidir?",
+            options: ["İlk Çağ", "Antik Çağ", "Orta Çağ", "Yakın Çağ", "Arkaik Çağ"],
+            answer: 2,
+            explanation: "Orta Çağ iktisat düşüncesi, Kilise'nin iktisadi politikaları belirleme gücüne sahip olduğu bir dönemde geliştiği için, dinin ekonomik faaliyetler üzerindeki etkisi büyük olmuştur. Skolastik düşünce bu dönemde ortaya çıkmıştır."
+        },
+        {
+            id: 8,
+            question: "Kâr'ı, maliyete eklenen ve fiyatların yükselmesine neden olan bir fazlalık olarak gören ve Buhranlar ile satılamayan malların temel nedeninin de bu fazlalıkta yatmakta olduğunu savunan düşünür aşağıdakilerden hangisidir?",
+            options: ["Robert Owen", "Charles Fourier", "Sismonde de Sismondi", "Louis Blanc", "Ferdinand Lassalle"],
+            answer: 0,
+            explanation: "Robert Owen'a göre kâr, maliyete eklenen ve fiyatların yükselmesine neden olan bir fazlalıktı. Buhranların ve satılamayan malların temel nedeni de bu fazlalıkta yatmaktaydı."
+        },
+        {
+            id: 9,
+            question: "Aşağıdakilerden hangisi Malthus'un ücretlerle ilgili düşüncesini yansıtmaktadır?",
+            options: ["İnsanlar bolluk içinde yaşamaktadır.", "Besin kaynakları verimlilik artışı ile hızla çoğalmaktadır.", "Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir.", "Gıda fiyatları düşmekte ortalama yaşam standardı artmaktadır.", "Verimsiz topraklar ile üretim maliyetleri düşmektedir."],
+            answer: 2,
+            explanation: "Ücretlerin, kritik eşik olan asgari geçim düzeyinin altına inmesi önlenmelidir."
+        },
+        {
+            id: 10,
+            question: "Aşağıdakilerin hangisi klasik iktisatçıların istihdam düşüncesini ifade etmektedir?",
+            options: ["Bireylerin para talebi pek çok nedenden olabilir, işlem, tasarruf, ihtiyat saikleri gibi.", "Fazla üretim ya da yetersiz tüketimde kriz oluşur.", "Ekonomi tam istihdamın altında ya da üstünde dengede olabilir.", "Ekonomiyi arz yönlendirir ve talep arza uyum sağlar.", "Piyasa fiyatları ve ücretler esnek değildir."],
+            answer: 3,
+            explanation: "Klasikler arz çekişli yaklaşımını benimseyerek ekonomiyi arzın yönlendirdiği ve talebin arza uyum sağladığı düşüncesindedirler. (Say Yasası: Her arz kendi talebini yaratır)."
+        },
+        {
+            id: 11,
+            question: "Aşağıdakilerden hangisi klasik iktisatçıların devlet bütçesine ilişkin görüşünü ifade etmektedir?",
+            options: ["Genişletici maliye politikaları ile açık bütçe yaklaşımı", "Daraltıcı maliye politikaları ile açık bütçe yaklaşımı", "Genişletici maliye politikaları ile bütçe fazlası yaklaşımı", "Daraltıcı maliye politikaları ile bütçe fazlası yaklaşımı", "Yansız maliye politikaları ile denk bütçe yaklaşımı"],
+            answer: 4,
+            explanation: "Klasik iktisatçılara göre maliye politikaları yansız olmalı, yani devlet ekonomiye müdahale etmemeli, üretici ve tüketicilerin davranışları üzerinde etkili olmamalıydı. Denk bütçe yaklaşımı esastır."
+        },
+        {
+            id: 12,
+            question: "Aşağıdakilerden hangisi 'iradi işsizlik' tanımına uygundur?",
+            options: ["Cari ücret seviyesinde çalışma imkanı olmasına rağmen gönüllü olarak çalışılmaması halidir", "Cari ücret düzeyinden çalışmaya razı olunmasına rağmen iş bulunamama halidir.", "Reel ücretin nominal ücretten yüksek olması durumunda ortaya çıkan işsizlik halidir", "Nominal ücretin reel ücretten yüksek olması durumunda ortaya çıkan işsizlik halidir", "Teknolojik yenilikler sonucu ortaya çıkan işsizlik halidir"],
+            answer: 0,
+            explanation: "İradi işsizlik, cari ücret seviyesinde çalışma imkanı olmasına rağmen gönüllü olarak çalışılmaması halidir."
+        },
+        {
+            id: 13,
+            question: "'... gelir, gelirin insanların gelecekte devam edeceğini beklediği kısmıdır ve ortalama geliri temsil eder.... gelir ise gelirin insanların devamlılığını beklemediği kısmıdır'<br><br>Yukarıdaki anlatımlarda boş bırakılan yerlere hangi kavramların gelmesi gerekir?",
+            options: ["Sürekli, geçici", "Kısmi, tam", "Nispi, bütün", "Bütün, arızi", "Reel, artan"],
+            answer: 0,
+            explanation: "Sürekli gelir, gelirin insanların gelecekte devam edeceğini beklediği kısmıdır ve ortalama geliri temsil eder. Geçici gelir ise gelirin insanların devamlılığını beklemediği kısmıdır."
+        },
+        {
+            id: 14,
+            question: "Faizi; 'doğal faiz' ve 'piyasa faizi' olarak tanımlayan; ekonomi için ideal durumun, piyasa faizinin doğal faiz oranına eşit olması gerektiğini savunan düşünür kimdir?",
+            options: ["Knut Wicksell", "Böhm-Bawerk", "John Bates Clark", "David Ricardo", "Leon Walras"],
+            answer: 0,
+            explanation: "Wicksell iki faiz oranından söz etmektedir. İlki doğal faiz oranıdır. Wicksell için ideal durum, piyasa faizinin doğal orana eşit olmasıdır."
+        },
+        {
+            id: 15,
+            question: "Klasiklere göre cari ücret düzeyinde iş bulamayan kimseler aşağıdakilerden hangisidir?",
+            options: ["İradi işsizler", "İradi olmayan işsizler", "Sorumsuz işsizler", "Eğitimsiz işsizler", "Ünidini yitirmiş işsizler"],
+            answer: 0,
+            explanation: "Klasiklere göre işsizlik durumunda tüm işsizler iş bulana kadar reel ücretler düşer ve işsizlik ortadan kalkar. Dolayısıyla cari ücret seviyesinde iş bulamayan kimseler, iradi (gönüllü) işsizlerdir."
+        },
+        {
+            id: 16,
+            question: "Napolyon Savaşları 1815 yılında Napolyon'un yenilgisi ile son bulup barış anlaşması imzalandıktan sonra, Almanya kaç küçük devlete bölünmüştür?",
+            options: ["20", "39", "41", "43", "45"],
+            answer: 1,
+            explanation: "Napolyon Savaşları 1815 yılında Napolyon'un yenilgisi ile son bulup barış anlaşması imzalandıktan sonra, Almanya 39 küçük devlete bölünmüştü."
+        },
+        {
+            id: 17,
+            question: "'İktisat bilimini oluşturabilmek için yalnızca toplumdaki iktisadi olayları değil, ekonomiyi etkileyen her türlü unsuru dikkate almak gereklidir' düşüncesi aşağıdaki iktisatçılardan hangisine aittir?",
+            options: ["D. Ricardo", "Whewell", "R. Jones", "W. Bagehot", "A. Toynbee"],
+            answer: 2,
+            explanation: "Jones'a göre, iktisat bilimini oluşturabilmek için yalnızca toplumdaki iktisadi olayları değil, ekonomiyi etkileyen her türlü unsuru dikkate almak gerekliydi."
+        },
+        {
+            id: 18,
+            question: "Aşağıdakilerden hangisi Yeni Klasik İktisadi Yaklaşım'ın dayandığı temel varsayımlar arasında <u>yanlış</u> olarak verilmiştir?",
+            options: ["Piyasaların kendiliğinden dengeye gelmesi ve esnek fiyatlar", "İrrasyonel beklentiler", "Tesadüfi hata, eksik bilgi ve firma yanılması", "Paranın yansızlığı ve aktif iktisat politikalarının etkisizliği", "Ekonomik dalgalanmaların esas olarak parasal gelişmelerden kaynaklanmış olması"],
+            answer: 1,
+            explanation: "Yeni Klasik İktisadi Yaklaşım 'Rasyonel beklentiler' varsayımına dayanır. İrrasyonel beklentiler bu yaklaşımın varsayımı değildir."
+        },
+        {
+            id: 19,
+            question: "Tarihin iktisadi analizlere dâhil edilmesi gerektiğini savunan iktisatçı aşağıdakilerden hangisidir?",
+            options: ["W. Roscher", "C. Menger", "G. Von Schmoller", "K. Knies", "B. Hildebrand"],
+            answer: 0,
+            explanation: "Eski kuşaktan W. Roscher tarihin iktisadi analizlere dâhil edilmesi gerektiğini savunan iktisatçıdır."
+        },
+        {
+            id: 20,
+            question: "Merkantilizmin temel ilkelerinden biri aşağıdakilerden hangisidir?",
+            options: ["Liberalizm", "Serbest ticaret", "Müdahalecilik", "Komünizm", "Yatırımcı dostu politika"],
+            answer: 2,
+            explanation: "Merkantilizm, devletin ekonomi üzerindeki müdahale gücünü savunan bir iktisadi düşünce sistemidir. Bu nedenle müdahalecilik, merkantilizmin temel ilkelerinden biridir."
+        }
+    ],
+    test2: [
+        {
+            id: 1,
+            question: "Geç Protestan Geleneğin temsilcisi John Calvin'in iktisadi düşüncesine göre kurtuluşa nasıl ulaşılır?",
+            options: ["Kilisenin iktisadi politikalarına tam uyarak", "Meslekte uzmanlaşarak ve disiplinli olarak", "Lüks yaşam sürerek", "Hedonist tüketim anlayışına uyarak", "Faizden uzak durarak"],
+            answer: 1,
+            explanation: "Calvin'e göre, 'Günahkar insanın' kurtuluşa erebilmesi için mesleğinde uzmanlaşması, sistemli çalışması, kendini disipline etmesi gerekir."
+        },
+        {
+            id: 2,
+            question: "Parasalcı iktisadi düşüncenin, serbest piyasa mekanizmasının korunması ve müdahalelerden kaçınılması ilkesi yeni klasik yaklaşımda hangi adla anılmaktadır?",
+            options: ["Piyasa optimumu", "Piyasa temizlenmesi", "Piyasa aksaklığı", "Tarafsız maliye", "Jandarma devlet"],
+            answer: 1,
+            explanation: "Parasalcı iktisadi düşüncenin, serbest piyasa mekanizmasının korunması ve müdahalelerden kaçınılması ilkesi yeni klasik yaklaşımda piyasa temizlenmesi adıyla anılmaktadır."
+        },
+        {
+            id: 3,
+            question: "Aşağıdakilerden hangisi Thomas More'un Ütopia isimli kitabında yer verdiği düşünceleri arasında <u>yer almaz</u>?",
+            options: ["Thomas More'un Ütopya'sında kolektif mülkiyet söz konusudur.", "Thomas More'a göre üretime herkes katılacaktır.", "Üretimin temel amacı ütopyanın ihtiyacının karşılanmasıdır.", "Thomas More'a göre bütün suçların ve huzursuzlukların kaynağı özel mülkiyettir.", "Ütopya'da bütün düzenlemeler yerel feodaller tarafından yapılır."],
+            answer: 4,
+            explanation: "Ütopya'da bütün düzenlemeler başkentte yer alan otorite tarafından yapılır, yerel feodaller tarafından değil."
+        },
+        {
+            id: 4,
+            question: "Merkantilizmi siyasal amaçları gerçekleştirmek için devletin ekonomik yönden güçlü olmasını hedefleyen bir sistem olarak tanımlayan yazar aşağıdakilerden hangisidir?",
+            options: ["V. Mirabeau", "A. Smith", "G. Schmoller", "W. Cunningham", "J-B. Colbert"],
+            answer: 3,
+            explanation: "Merkantilizmi siyasal amaçları gerçekleştirmek için devletin ekonomik yönden güçlü olmasını hedefleyen bir sistem olarak tanımlayan yazar W. Cunningham'dır."
+        },
+        {
+            id: 5,
+            question: "Tümdengelim yöntemini ilk kez iktisadi olayların yorumlanmasına uyarlayan ve olaylar arasında mantıksal bir ilişki kurma çabası içine giren düşünür aşağıdakilerden hangisidir?",
+            options: ["Quesnay", "Montesqueiu", "Locke", "Rousseau", "de Gournay"],
+            answer: 0,
+            explanation: "Tümdengelim yöntemini ilk kez iktisadi olayların yorumlanmasına uyarlayan ve olaylar arasında mantıksal bir ilişki kurma çabası içine giren düşünür Quesnay'dır."
+        },
+        {
+            id: 6,
+            question: "Büyük Buhran olarak adlandırılan iktisadi kriz, hangi yılda meydana gelmiştir?",
+            options: ["1939", "1929", "1943", "2008", "2001"],
+            answer: 1,
+            explanation: "Büyük Buhran olarak adlandırılan iktisadi kriz, 1929 yılında meydana gelmiştir."
+        },
+        {
+            id: 7,
+            question: "Friedman ve bu görüşe mensup bazı iktisatçıların görev yaptığı üniversite olması ve yayınların ağırlıklı olarak parasalcı yaklaşıma uygun olması nedeniyle, bu yaklaşım bilim camiasında hangi iktisat okulu olarak da anılmaktadır?",
+            options: ["Berlin", "Chicago", "Viyana", "Londra", "Roma"],
+            answer: 1,
+            explanation: "Bu yaklaşım bilim camiasında Chicago Okulu olarak anılmaktadır."
+        },
+        {
+            id: 8,
+            question: "I. Esas olarak uzun dönemi dikkate alsalar da paranın yansızlığı analizlerinde kısa ve uzun dönem ayırımını gerekli bulmuşlardır<br>II. Uzun dönemde ekonomide tam istihdam dengesi sağlanacaktır<br><br>Başlıca nitelikleri yukarıda ifade edilen iktisadi anlayış hangisidir?",
+            options: ["Araçsalcı", "Anamalcı", "Parasalcı", "Kurumsalcı", "Monopolcü"],
+            answer: 2,
+            explanation: "Bu özellikler Parasalcı (Monetarist) yaklaşıma aittir. Ekonomide reel ve parasal kesim diye iki ayrı kısım söz konusudur."
+        },
+        {
+            id: 9,
+            question: "Keynesyen iktisada göre yatırım, aşağıdakilerin hangisinin fonksiyonudur?",
+            options: ["Beklentilerin", "Faizin", "Para talebinin", "Para arzının", "Rantın"],
+            answer: 0,
+            explanation: "Keynesyen iktisada göre yatırım, Klasiklerin ileri sürdüğü gibi faizin değil, beklentilerin bir fonksiyonudur."
+        },
+        {
+            id: 10,
+            question: "Tüketicinin faydasını maksimum yapabilmesi için her bir maldan elde ettiği faydanın o malın fiyatına oranının eşitlenmesi aşağıdakilerden hangisi ile açıklanır?",
+            options: ["Marjinal ikame oranı ilkesi", "Azalan marjinal fayda ilkesi", "Eş marjinal fayda ilkesi", "Subjektif değer teorisi", "Gossen kanunları"],
+            answer: 2,
+            explanation: "Bu eşitlik 'eş marjinal fayda ilkesine' (MUx/Px = MUy/Py) karşılık gelir."
+        },
+        {
+            id: 11,
+            question: "Keynesyen ekonomide aşağıdakilerden hangisi para arzını artırarak faizlerin düşürülemeyeceği durumu ifade eder?",
+            options: ["Likidite tuzağı", "Gömüleme tuzağı", "Dışsallık paradoksu", "Türevsel ikilik", "Klasik dikotomi"],
+            answer: 0,
+            explanation: "Likidite tuzağı koşullarında para arzını arttırmak suretiyle faiz oranlarını düşürmek mümkün olmayacaktır."
+        },
+        {
+            id: 12,
+            question: "Heterodoks eleştirilerin en serti aşağıdakilerden hangisi tarafından yapılmıştır?",
+            options: ["K. H. Marx", "D. Ricardo", "T. R. Malthus", "A. Smith", "J. B. Say"],
+            answer: 0,
+            explanation: "Heterodoks eleştirilerin en serti sosyalist iktisadi düşünceden ve kendisini bilimsel sosyalist olarak niteleyen K. H. Marx'tan gelmişti."
+        },
+        {
+            id: 13,
+            question: "Aşağıdakilerden hangisi klasik iktisadın eleştiriye maruz kalan en önemli noktasıdır?",
+            options: ["İnsan tanımı", "Emek tanımı", "Sermaye", "Rant", "Toprak"],
+            answer: 0,
+            explanation: "Klasik iktisadın eleştiriye maruz kalan en önemli noktası, onun 'homo economicus' olarak isimlendirilen insan tanımıydı."
+        },
+        {
+            id: 14,
+            question: "Aşağıdakilerden hangisi kurumcu iktisadi düşüncenin yeni kuşak temsilcileri arasında yer almaz?",
+            options: ["Ronald Coase", "Oliwer Eaton Williamson", "John Kenneth Galbraith", "Richard Posner", "J. Rogers Commons"],
+            answer: 4,
+            explanation: "J. Rogers Commons eski kuşak temsilcilerdendir. Diğerleri yeni kurumcu kuşaktır."
+        },
+        {
+            id: 15,
+            question: "Geleceğe dayalı az bilgiye sahip olan yatırımcılar, yatırım kararlarını alırken sayısal verilerden ziyade içgüdüsel karar almalarına Keynes tarafından aşağıdaki tanımlamalardan hangisi yapılmıştır?",
+            options: ["Özel teori", "Gayri iradi", "Hayvani içgüdü", "Genel teori", "Talep yanlı"],
+            answer: 2,
+            explanation: "Keynes tarafından bu durum 'Hayvani içgüdü' (Animal Spirits) olarak tanımlanmıştır."
+        },
+        {
+            id: 16,
+            question: "Klasik iktisadi düşüncenin temelindeki en önemli unsur aşağıdakilerden hangisidir?",
+            options: ["Homo economicus", "Arazi", "Tarım", "Sanayi", "Devlet"],
+            answer: 0,
+            explanation: "Klasik iktisadi düşüncenin temelindeki en önemli unsur homo economicus, yani insan faktörüydü."
+        },
+        {
+            id: 17,
+            question: "Merkantilizmin ortaya çıkış koşullarından biri aşağıdakilerden hangisidir?",
+            options: ["Teknolojik ilerleme
