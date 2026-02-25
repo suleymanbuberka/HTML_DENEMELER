@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pratik Soru Çözüm Defteri</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Markdown Dönüştürücü (Kalın yazılar, maddeler için) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- MathJax (Formülleri kusursuz SVG'ye çevirmek için) -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+            svg: { fontCache: 'global' },
+            startup: { typeset: false } // Otomatik çevirmeyi kapat, biz tetikleyeceğiz
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- html2canvas (Ekran görüntüsü almak için) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        /* Noktalı Arka Plan */
+        .bg-dotted {
+            background-color: #ffffff;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Sabit ve Orantılı Çıktı Alanı (Esnek yapıldı) */
+        .canvas-container {
+            width: 100%;
+            min-width: 1000px; /* Tabletlerde yatayda bozulmaması için minimum genişlik */
+            max-width: 1200px;
+            min-height: 750px;
+        }
+
+        /* Çıktı anında gizlenecek nesneler */
+        @media print { .no-print { display: none !important; } }
+
+        /* Yazı alanı için özel stiller (Markdown dönüştüğünde güzel durması için) */
+        .rendered-content p { margin-bottom: 1rem; }
+        .rendered-content strong { font-weight: 700; color: #1e293b; }
+        .rendered-content ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        
+        /* MathJax SVG'lerin metinle hizalanması için ince ayar */
+        mjx-container[jax="SVG"] { display: inline-block !important; }
+
+        /* Scrollbar güzelleştirme */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Tabletlerde (iOS) form elemanlarına tıklandığında otomatik zoom yapmayı engellemek için */
+        textarea { font-size: 16px !important; }
+    </style>
+</head>
+<body class="min-h-screen p-2 md:p-8 flex flex-col items-center overflow-x-auto">
+
+    <!-- Kontrol Paneli (Tabletler için flex-wrap eklendi) -->
+    <div class="w-full max-w-[1200px] flex flex-wrap gap-4 justify-between items-center bg-white p-4 rounded-xl shadow border border-gray-200 mb-6 no-print sticky top-2 md:top-4 z-50">
+        <div class="w-full sm:w-auto">
+            <h2 class="font-bold text-gray-800 text-lg">Pratik Çözüm Paneli</h2>
+            <p class="text-sm text-gray-500">1. Çözümü sola yapıştır &nbsp;|&nbsp; 2. Resmi sağa ekle</p>
+        </div>
+        <div class="flex gap-2 w-full sm:w-auto justify-end">
+            <button id="btn-toggle" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 md:py-2.5 rounded-lg font-medium transition flex items-center gap-2 border flex-1 sm:flex-none justify-center">
+                <span>👁️</span> Önizle
+            </button>
+            <button id="btn-capture" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 md:py-2.5 rounded-lg shadow transition font-medium flex items-center gap-2 flex-1 sm:flex-none justify-center">
+                <svg id="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                <span id="btn-text">Kaydet</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Dışa Aktarılacak Alan -->
+    <div id="capture-area" class="bg-dotted shadow-xl border border-gray-200 canvas-container flex flex-row p-6 md:p-10 gap-6 md:gap-8 relative mx-auto">
+        
+        <!-- SOL PANEL: Yazı Alanı (%55 Genişlik) -->
+        <div class="w-[55%] flex flex-col relative h-full">
+            
+            <!-- Kullanıcının yapıştırdığı metin kutusu -->
+            <textarea id="text-input" class="w-full h-[650px] p-4 bg-white/70 border-2 border-dashed border-gray-300 rounded-xl resize-none focus:outline-none focus:border-indigo-400 focus:bg-white text-gray-700 leading-relaxed no-print transition-colors" placeholder="Yapay zekanın verdiği çözümü buraya yapıştırın..."></textarea>
+            
+            <!-- Çıktı anında formüllerin render edildiği görünmez kutu (Sadece çıktıda ve önizlemede görünür) -->
+            <div id="text-output" class="hidden w-full h-[650px] p-2 text-[16px] leading-relaxed text-gray-800 rendered-content">
+                <!-- İşlenmiş metin buraya gelecek -->
+            </div>
+        </div>
+
+        <!-- SAĞ PANEL: Resim Alanı (%45 Genişlik) -->
+        <div class="w-[45%] flex flex-col relative h-full">
+
+            <!-- Resim Yükleme/Yapıştırma Alanı (Tablet uyumlu) -->
+            <div id="upload-container" class="w-full h-[650px] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl bg-white/50 transition-colors relative no-print">
+                <div class="text-center w-full px-4">
+                    <div class="bg-gray-100 p-4 rounded-full inline-block mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    </div>
+                    <span class="text-gray-800 font-semibold block text-xl mb-6">Soru Görselini Ekle</span>
+                    
+                    <div class="flex flex-col gap-3 justify-center w-full max-w-xs mx-auto">
+                        <!-- Dokunmatik uyumlu galeri butonu -->
+                        <label class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3.5 rounded-xl text-md font-medium shadow-md cursor-pointer transition flex items-center justify-center gap-3 w-full">
+                            <span class="text-xl">🖼️</span> Galeriden Seç
+                            <input type="file" id="image-upload" accept="image/*" class="hidden">
+                        </label>
+                        
+                        <!-- Dokunmatik uyumlu pano butonu -->
+                        <button type="button" id="btn-paste-touch" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3.5 rounded-xl text-md font-medium shadow-md cursor-pointer transition flex items-center justify-center gap-3 w-full">
+                            <span class="text-xl">📋</span> Panodan Yapıştır
+                        </button>
+                    </div>
+                    
+                    <span class="text-gray-400 text-xs mt-6 block border-t border-gray-200 pt-3 w-3/4 mx-auto">
+                        Klavye varsa: Ctrl+V desteklenir.
+                    </span>
+                </div>
+            </div>
+
+            <!-- Yüklenen Görselin Gösterildiği Yer -->
+            <img id="question-image" src="" alt="Soru" class="hidden w-full h-[650px] object-contain rounded-lg drop-shadow-sm">
+        </div>
+
+    </div>
+
+    <!-- JavaScript Mantığı -->
+    <script>
+        const textInput = document.getElementById('text-input');
+        const textOutput = document.getElementById('text-output');
+        const btnToggle = document.getElementById('btn-toggle');
+        
+        const imageUpload = document.getElementById('image-upload');
+        const questionImage = document.getElementById('question-image');
+        const uploadContainer = document.getElementById('upload-container');
+        const btnPasteTouch = document.getElementById('btn-paste-touch');
+        
+        let isPreviewMode = false;
+
+        // 1. Örnek Metin Doldurma (Nasıl çalıştığını göstermek için)
+        textInput.value = "Merhaba! Soruyu birlikte adım adım çözelim.\n\nKütle çekim kuvveti formülümüz:\n$$ F = G \\cdot \\frac{M \\cdot m}{d^2} $$\n\n**1. Adım:** Verilenleri yerine yazalım...\n$$ F_K = G \\cdot \\frac{M \\cdot m_K}{4r^2} $$\n\n**Sonuç:** \nKütlelerin oranı: $$ \\frac{m_K}{m_L} = \\frac{4}{9} $$ olarak bulunur.";
+
+        // 2. Metni ve Formülleri İşleme Fonksiyonu
+        function renderMathAndText() {
+            // Markdown'u HTML'e çevir
+            textOutput.innerHTML = marked.parse(textInput.value);
+            
+            // MathJax ile formülleri oluştur (SVG olarak)
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise([textOutput]).catch(function (err) {
+                    console.error('MathJax hatası:', err.message);
+                });
+            }
+        }
+
+        // 3. Düzenle/Önizle Modu Değiştirici
+        function toggleMode() {
+            isPreviewMode = !isPreviewMode;
+            if(isPreviewMode) {
+                renderMathAndText();
+                textInput.classList.add('hidden');
+                textOutput.classList.remove('hidden');
+                btnToggle.innerHTML = "<span>✏️</span> Düzenlemeye Dön";
+            } else {
+                textOutput.classList.add('hidden');
+                textInput.classList.remove('hidden');
+                btnToggle.innerHTML = "<span>👁️</span> Görünümü Test Et";
+            }
+        }
+        btnToggle.addEventListener('click', toggleMode);
+
+        // 4. PANODAN RESİM YAPIŞTIRMA (Ctrl+V) YAKALAYICI
+        document.addEventListener('paste', function(e) {
+            const clipboardData = e.clipboardData || window.clipboardData;
+            if (!clipboardData) return;
+            
+            const items = clipboardData.items;
+            let imageFound = false;
+            
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image/') !== -1) {
+                    imageFound = true;
+                    const blob = items[i].getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        questionImage.src = event.target.result;
+                        questionImage.classList.remove('hidden');
+                        uploadContainer.style.display = 'none';
+                    };
+                    reader.readAsDataURL(blob);
+                    break;
+                }
+            }
+            
+            if(imageFound && document.activeElement === textInput) {
+                e.preventDefault(); 
+            }
+        });
+
+        // 4.5. TABLETLER İÇİN BUTONLA PANODAN YAPIŞTIRMA
+        btnPasteTouch.addEventListener('click', async function() {
+            try {
+                // Tarayıcı pano izni isteyecektir
+                if (!navigator.clipboard || !navigator.clipboard.read) {
+                    throw new Error("Pano API desteklenmiyor.");
+                }
+                const clipboardItems = await navigator.clipboard.read();
+                let imageFound = false;
+                
+                for (const clipboardItem of clipboardItems) {
+                    const imageTypes = clipboardItem.types.filter(type => type.startsWith('image/'));
+                    for (const imageType of imageTypes) {
+                        imageFound = true;
+                        const blob = await clipboardItem.getType(imageType);
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            questionImage.src = event.target.result;
+                            questionImage.classList.remove('hidden');
+                            uploadContainer.style.display = 'none';
+                        };
+                        reader.readAsDataURL(blob);
+                        break;
+                    }
+                    if (imageFound) break;
+                }
+                
+                if (!imageFound) {
+                    alert("Panoda bir resim bulunamadı. Lütfen önce bir resmi kopyaladığınızdan emin olun.");
+                }
+            } catch (err) {
+                console.error("Pano hatası:", err);
+                alert("Tarayıcınızın güvenlik ayarları bu ortamda butona tıklayarak panoyu okumayı engelliyor (NotAllowedError).\n\nLütfen görsel yüklemek için:\n👉 Klavyeniz varsa 'Ctrl + V' kısayolunu kullanın.\n👉 Veya doğrudan 'Galeriden Seç' butonunu kullanarak görselinizi yükleyin.");
+            }
+        });
+
+        // 4.6. SÜRÜKLE BIRAK (Drag & Drop) DESTEĞİ
+        const rightPanel = uploadContainer.parentElement;
+        
+        rightPanel.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadContainer.classList.add('border-indigo-500', 'bg-indigo-50');
+        });
+        
+        rightPanel.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadContainer.classList.remove('border-indigo-500', 'bg-indigo-50');
+        });
+        
+        rightPanel.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadContainer.classList.remove('border-indigo-500', 'bg-indigo-50');
+            
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                if (file.type.indexOf('image/') !== -1) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        questionImage.src = event.target.result;
+                        questionImage.classList.remove('hidden');
+                        uploadContainer.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        // 5. Manuel Resim Seçimi (Tıklayarak)
+        imageUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    questionImage.src = event.target.result;
+                    questionImage.classList.remove('hidden');
+                    uploadContainer.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 6. GÖRÜNTÜYÜ KAYDETME (html2canvas)
+        document.getElementById('btn-capture').addEventListener('click', function() {
+            // Eğer düzenleme modundaysa, ekran görüntüsü almadan önce arka planda metni formatla
+            if (!isPreviewMode) {
+                renderMathAndText();
+                textInput.classList.add('hidden');
+                textOutput.classList.remove('hidden');
+            }
+
+            const btnText = document.getElementById('btn-text');
+            const originalText = btnText.innerText;
+            btnText.innerText = "Kaydediliyor...";
+            this.classList.add('opacity-75', 'cursor-wait');
+
+            const captureArea = document.getElementById('capture-area');
+            const originalShadow = captureArea.style.boxShadow;
+            captureArea.style.boxShadow = 'none'; // Kenar gölgesi resimde kötü durmasın diye geçici kapatıyoruz
+            captureArea.classList.remove('border', 'border-gray-200');
+
+            // MathJax'in render işlemini tamamlaması için çok kısa bir süre bekliyoruz
+            setTimeout(() => {
+                html2canvas(captureArea, {
+                    scale: 2, // 2x yüksek çözünürlük
+                    backgroundColor: "#f1f5f9",
+                    useCORS: true,
+                    logging: false
+                }).then(canvas => {
+                    // Görüntüyü İndir
+                    const link = document.createElement('a');
+                    link.download = 'soru_cozumu.jpg';
+                    link.href = canvas.toDataURL('image/jpeg', 0.95);
+                    link.click();
+                }).finally(() => {
+                    // İşlem bitince her şeyi eski haline getir
+                    btnText.innerText = originalText;
+                    this.classList.remove('opacity-75', 'cursor-wait');
+                    captureArea.style.boxShadow = originalShadow;
+                    captureArea.classList.add('border', 'border-gray-200');
+                    
+                    // Eğer butona basmadan önce düzenleme modundaysa, tekrar düzenleme moduna döndür
+                    if (!isPreviewMode) {
+                        textOutput.classList.add('hidden');
+                        textInput.classList.remove('hidden');
+                    }
+                });
+            }, 300);
+        });
+    </script>
+</body>
+</html>
