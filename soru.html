@@ -80,7 +80,7 @@
             <!-- Yazı Boyutu Kontrolü -->
             <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-2 md:py-2.5 rounded-lg flex-1 sm:flex-none justify-center">
                 <span class="text-sm font-medium text-gray-600">Yazı Büyüklüğü:</span>
-                <input type="range" id="font-size-slider" min="12" max="40" value="16" class="w-24 md:w-32 accent-indigo-600">
+                <input type="range" id="font-size-slider" min="8" max="40" value="16" class="w-24 md:w-32 accent-indigo-600">
                 <span id="font-size-display" class="text-xs font-bold text-indigo-700 w-6 text-center">16</span>
             </div>
 
@@ -303,7 +303,7 @@
 
 
         // --- YAZI VE DİĞER FONKSİYONLAR ---
-        textInput.value = "Merhaba! Soruyu birlikte adım adım çözelim.\n\nKütle çekim kuvveti formülümüz:\n$$ F = G \\cdot \\frac{M \\cdot m}{d^2} $$\n\n**1. Adım:** Verilenleri yerine yazalım...\n$$ F_K = G \\cdot \\frac{M \\cdot m_K}{4r^2} $$\n\n**Sonuç:** \nKütlelerin oranı: $$ \\frac{m_K}{m_L} = \\frac{4}{9} $$ olarak bulunur.";
+        textInput.value = "";
 
         function renderMathAndText() {
             let text = textInput.value;
