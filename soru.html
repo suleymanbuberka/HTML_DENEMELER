@@ -39,74 +39,88 @@
             background-size: 24px 24px;
         }
 
-        /* Sabit ve Orantılı Çıktı Alanı (Esnek yapıldı) */
+        /* Sabit ve Orantılı Çıktı Alanı (16:9 Ekran Oranı) */
         .canvas-container {
             width: 100%;
-            min-width: 1000px; /* Tabletlerde yatayda bozulmaması için minimum genişlik */
             max-width: 1200px;
-            min-height: 750px;
+            aspect-ratio: 16 / 9; /* Standart ekran görüntüsü boyutu */
+            min-height: auto;
         }
 
         /* Çıktı anında gizlenecek nesneler */
         @media print { .no-print { display: none !important; } }
 
         /* Yazı alanı için özel stiller (Markdown dönüştüğünde güzel durması için) */
-        .rendered-content p { margin-bottom: 1rem; }
+        .rendered-content p { margin-bottom: 0.75em; }
         .rendered-content strong { font-weight: 700; color: #1e293b; }
-        .rendered-content ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .rendered-content ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.75em; }
         
         /* MathJax SVG'lerin metinle hizalanması için ince ayar */
         mjx-container[jax="SVG"] { display: inline-block !important; }
 
-        /* Scrollbar güzelleştirme */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        
+        /* Çıktıda scrollbar görünmesini engelleme */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         /* Tabletlerde (iOS) form elemanlarına tıklandığında otomatik zoom yapmayı engellemek için */
         textarea { font-size: 16px !important; }
     </style>
 </head>
 <body class="min-h-screen p-2 md:p-8 flex flex-col items-center overflow-x-auto">
 
-    <!-- Kontrol Paneli (Tabletler için flex-wrap eklendi) -->
+    <!-- Kontrol Paneli -->
     <div class="w-full max-w-[1200px] flex flex-wrap gap-4 justify-between items-center bg-white p-4 rounded-xl shadow border border-gray-200 mb-6 no-print sticky top-2 md:top-4 z-50">
-        <div class="w-full sm:w-auto">
+        <div class="w-full xl:w-auto">
             <h2 class="font-bold text-gray-800 text-lg">Pratik Çözüm Paneli</h2>
-            <p class="text-sm text-gray-500">1. Çözümü sola yapıştır &nbsp;|&nbsp; 2. Resmi sağa ekle</p>
+            <p class="text-sm text-gray-500">Çözümü sola yapıştır, resmi sağa ekle ve ortala.</p>
         </div>
-        <div class="flex gap-2 w-full sm:w-auto justify-end">
-            <button id="btn-toggle" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 md:py-2.5 rounded-lg font-medium transition flex items-center gap-2 border flex-1 sm:flex-none justify-center">
+        
+        <div class="flex flex-wrap gap-3 w-full xl:w-auto justify-end items-center">
+            
+            <!-- Yazı Boyutu Kontrolü -->
+            <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-2 md:py-2.5 rounded-lg flex-1 sm:flex-none justify-center">
+                <span class="text-sm font-medium text-gray-600">Yazı Büyüklüğü:</span>
+                <input type="range" id="font-size-slider" min="12" max="40" value="16" class="w-24 md:w-32 accent-indigo-600">
+                <span id="font-size-display" class="text-xs font-bold text-indigo-700 w-6 text-center">16</span>
+            </div>
+
+            <!-- İşlem Butonları -->
+            <button id="btn-toggle" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-3 md:py-2.5 rounded-lg font-medium transition flex items-center justify-center gap-2 border flex-1 sm:flex-none">
                 <span>👁️</span> Önizle
             </button>
-            <button id="btn-capture" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 md:py-2.5 rounded-lg shadow transition font-medium flex items-center gap-2 flex-1 sm:flex-none justify-center">
+            <button id="btn-capture" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 md:py-2.5 rounded-lg shadow transition font-medium flex items-center justify-center gap-2 flex-1 sm:flex-none">
                 <svg id="btn-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                 <span id="btn-text">Kaydet</span>
             </button>
         </div>
     </div>
 
-    <!-- Dışa Aktarılacak Alan -->
-    <div id="capture-area" class="bg-dotted shadow-xl border border-gray-200 canvas-container flex flex-row p-6 md:p-10 gap-6 md:gap-8 relative mx-auto">
+    <!-- Dışa Aktarılacak Alan (16:9 Oranında Sabitlendi) -->
+    <div id="capture-area" class="bg-dotted shadow-xl border border-gray-200 canvas-container flex flex-row p-6 md:p-8 gap-6 md:gap-8 relative mx-auto overflow-hidden">
         
         <!-- SOL PANEL: Yazı Alanı (%55 Genişlik) -->
-        <div class="w-[55%] flex flex-col relative h-full">
+        <div class="w-[55%] flex flex-col h-full relative">
             
             <!-- Kullanıcının yapıştırdığı metin kutusu -->
-            <textarea id="text-input" class="w-full h-[650px] p-4 bg-white/70 border-2 border-dashed border-gray-300 rounded-xl resize-none focus:outline-none focus:border-indigo-400 focus:bg-white text-gray-700 leading-relaxed no-print transition-colors" placeholder="Yapay zekanın verdiği çözümü buraya yapıştırın..."></textarea>
+            <textarea id="text-input" class="flex-1 w-full p-4 bg-white/70 border-2 border-dashed border-gray-300 rounded-xl resize-none focus:outline-none focus:border-indigo-400 focus:bg-white text-gray-700 leading-relaxed no-print transition-colors no-scrollbar" placeholder="Yapay zekanın verdiği çözümü buraya yapıştırın..." style="font-size: 16px;"></textarea>
             
-            <!-- Çıktı anında formüllerin render edildiği görünmez kutu (Sadece çıktıda ve önizlemede görünür) -->
-            <div id="text-output" class="hidden w-full h-[650px] p-2 text-[16px] leading-relaxed text-gray-800 rendered-content">
+            <!-- Kullanıcıya formül ipucu -->
+            <div id="hint-box" class="mt-3 text-[13px] text-indigo-700 font-medium no-print flex items-center gap-2 bg-indigo-50/80 p-3 rounded-lg border border-indigo-100/50 flex-shrink-0">
+                <span class="text-lg">💡</span> 
+                <span><b>İpucu:</b> Yazıyı seçmek yerine, yapay zekanın mesajının altındaki <b>"Kopyala"</b> ikonuna tıklayıp buraya yapıştırırsanız formüller otomatik ve kusursuz çalışır!</span>
+            </div>
+
+            <!-- Çıktı anında formüllerin render edildiği görünmez kutu -->
+            <div id="text-output" class="hidden flex-1 w-full p-2 leading-relaxed text-gray-800 rendered-content overflow-y-hidden" style="font-size: 16px;">
                 <!-- İşlenmiş metin buraya gelecek -->
             </div>
         </div>
 
         <!-- SAĞ PANEL: Resim Alanı (%45 Genişlik) -->
-        <div class="w-[45%] flex flex-col relative h-full">
+        <div class="w-[45%] flex flex-col h-full relative">
 
-            <!-- Resim Yükleme/Yapıştırma Alanı (Tablet uyumlu) -->
-            <div id="upload-container" class="w-full h-[650px] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl bg-white/50 transition-colors relative no-print">
+            <!-- Resim Yükleme/Yapıştırma Alanı -->
+            <div id="upload-container" class="flex-1 w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl bg-white/50 transition-colors relative no-print">
                 <div class="text-center w-full px-4">
                     <div class="bg-gray-100 p-4 rounded-full inline-block mb-3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
@@ -114,26 +128,41 @@
                     <span class="text-gray-800 font-semibold block text-xl mb-6">Soru Görselini Ekle</span>
                     
                     <div class="flex flex-col gap-3 justify-center w-full max-w-xs mx-auto">
-                        <!-- Dokunmatik uyumlu galeri butonu -->
                         <label class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3.5 rounded-xl text-md font-medium shadow-md cursor-pointer transition flex items-center justify-center gap-3 w-full">
                             <span class="text-xl">🖼️</span> Galeriden Seç
                             <input type="file" id="image-upload" accept="image/*" class="hidden">
                         </label>
-                        
-                        <!-- Dokunmatik uyumlu pano butonu -->
                         <button type="button" id="btn-paste-touch" class="bg-gray-700 hover:bg-gray-800 text-white px-5 py-3.5 rounded-xl text-md font-medium shadow-md cursor-pointer transition flex items-center justify-center gap-3 w-full">
                             <span class="text-xl">📋</span> Panodan Yapıştır
                         </button>
                     </div>
-                    
-                    <span class="text-gray-400 text-xs mt-6 block border-t border-gray-200 pt-3 w-3/4 mx-auto">
-                        Klavye varsa: Ctrl+V desteklenir.
-                    </span>
                 </div>
             </div>
 
-            <!-- Yüklenen Görselin Gösterildiği Yer -->
-            <img id="question-image" src="" alt="Soru" class="hidden w-full h-[650px] object-contain rounded-lg drop-shadow-sm">
+            <!-- Etkileşimli Resim Görüntüleyici (Kaydırma & Zoom için) -->
+            <div id="image-viewport" class="hidden flex-1 w-full relative overflow-hidden rounded-xl bg-transparent">
+                <!-- Resim -->
+                <img id="question-image" src="" alt="Soru" class="absolute origin-top-left cursor-move" style="transform: translate(0px, 0px) scale(1); touch-action: none; max-width: none;">
+                
+                <!-- Görüntü Kontrol Paneli -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1 bg-white/95 backdrop-blur-md px-3 py-2 rounded-full shadow-lg border border-gray-200 no-print z-10">
+                    <button id="btn-zoom-out" class="p-1.5 text-gray-600 hover:text-indigo-600 transition" title="Uzaklaştır">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                    </button>
+                    <span id="zoom-level" class="text-sm font-medium text-gray-700 w-12 text-center select-none">100%</span>
+                    <button id="btn-zoom-in" class="p-1.5 text-gray-600 hover:text-indigo-600 transition" title="Yakınlaştır">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                    </button>
+                    <div class="w-px h-5 bg-gray-300 mx-1"></div>
+                    <button id="btn-reset-view" class="p-1.5 text-gray-600 hover:text-indigo-600 transition" title="Ortala ve Sığdır">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                    </button>
+                    <div class="w-px h-5 bg-gray-300 mx-1"></div>
+                    <button id="btn-change-image" class="p-1.5 text-red-500 hover:text-red-700 transition" title="Resmi Değiştir">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -142,24 +171,159 @@
     <script>
         const textInput = document.getElementById('text-input');
         const textOutput = document.getElementById('text-output');
+        const hintBox = document.getElementById('hint-box');
         const btnToggle = document.getElementById('btn-toggle');
         
         const imageUpload = document.getElementById('image-upload');
         const questionImage = document.getElementById('question-image');
         const uploadContainer = document.getElementById('upload-container');
+        const imageViewport = document.getElementById('image-viewport');
         const btnPasteTouch = document.getElementById('btn-paste-touch');
+        
+        const fontSizeSlider = document.getElementById('font-size-slider');
+        const fontSizeDisplay = document.getElementById('font-size-display');
         
         let isPreviewMode = false;
 
-        // 1. Örnek Metin Doldurma (Nasıl çalıştığını göstermek için)
+        // --- YAZI BOYUTU (FONT SIZE) KONTROLÜ ---
+        fontSizeSlider.addEventListener('input', function(e) {
+            const size = e.target.value;
+            fontSizeDisplay.innerText = size;
+            // Hem editörün hem de önizleme alanının yazı boyutunu güncelle
+            textInput.style.fontSize = size + 'px';
+            textOutput.style.fontSize = size + 'px';
+            
+            // MathJax svg'lerin boyutunu da orantılı büyütmek için em birimini tetikler
+            if (isPreviewMode) {
+                renderMathAndText(); 
+            }
+        });
+
+        // --- GÖRSEL SÜRÜKLEME VE ZOOM YÖNETİMİ ---
+        let imgState = { x: 0, y: 0, scale: 1 };
+        let isDragging = false;
+        let startX, startY;
+
+        function updateImageTransform() {
+            questionImage.style.transform = `translate(${imgState.x}px, ${imgState.y}px) scale(${imgState.scale})`;
+            document.getElementById('zoom-level').innerText = Math.round(imgState.scale * 100) + '%';
+        }
+
+        // Resmi ekrana sığdırıp ortalama
+        function centerAndFitImage() {
+            const vw = imageViewport.clientWidth;
+            const vh = imageViewport.clientHeight;
+            const iw = questionImage.naturalWidth;
+            const ih = questionImage.naturalHeight;
+
+            if(iw === 0 || ih === 0) return;
+
+            const scaleX = vw / iw;
+            const scaleY = vh / ih;
+            // Ekrana tam sığması için küçük olan oranı seç
+            imgState.scale = Math.min(scaleX, scaleY) * 0.98;
+
+            // Merkeze hizala
+            imgState.x = (vw - iw * imgState.scale) / 2;
+            imgState.y = (vh - ih * imgState.scale) / 2;
+
+            updateImageTransform();
+        }
+
+        questionImage.onload = centerAndFitImage;
+
+        // Yakınlaştırma Fonksiyonu
+        function zoomImage(direction) {
+            const oldScale = imgState.scale;
+            const factor = direction > 0 ? 1.15 : (1 / 1.15);
+            imgState.scale *= factor;
+            
+            if (imgState.scale < 0.1) imgState.scale = 0.1;
+            if (imgState.scale > 10) imgState.scale = 10;
+            
+            const vw = imageViewport.clientWidth;
+            const vh = imageViewport.clientHeight;
+            
+            imgState.x = vw/2 - (vw/2 - imgState.x) * (imgState.scale / oldScale);
+            imgState.y = vh/2 - (vh/2 - imgState.y) * (imgState.scale / oldScale);
+            
+            updateImageTransform();
+        }
+
+        document.getElementById('btn-zoom-in').addEventListener('click', () => zoomImage(1));
+        document.getElementById('btn-zoom-out').addEventListener('click', () => zoomImage(-1));
+        document.getElementById('btn-reset-view').addEventListener('click', centerAndFitImage);
+        
+        document.getElementById('btn-change-image').addEventListener('click', () => {
+            imageViewport.classList.add('hidden');
+            uploadContainer.style.display = 'flex';
+            questionImage.src = '';
+        });
+
+        imageViewport.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            const zoomDirection = e.deltaY > 0 ? -1 : 1;
+            zoomImage(zoomDirection);
+        }, {passive: false});
+
+        // Sürükle & Bırak (Pan) Mantığı
+        function onDragStart(e) {
+            if (e.target.closest('.no-print')) return; 
+
+            isDragging = true;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            startX = clientX - imgState.x;
+            startY = clientY - imgState.y;
+            questionImage.style.cursor = 'grabbing';
+        }
+
+        function onDragMove(e) {
+            if (!isDragging) return;
+            e.preventDefault(); 
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            imgState.x = clientX - startX;
+            imgState.y = clientY - startY;
+            updateImageTransform();
+        }
+
+        function onDragEnd() {
+            isDragging = false;
+            questionImage.style.cursor = 'move';
+        }
+
+        imageViewport.addEventListener('mousedown', onDragStart);
+        window.addEventListener('mousemove', onDragMove, {passive: false});
+        window.addEventListener('mouseup', onDragEnd);
+
+        imageViewport.addEventListener('touchstart', onDragStart, {passive: false});
+        window.addEventListener('touchmove', onDragMove, {passive: false});
+        window.addEventListener('touchend', onDragEnd);
+
+
+        // --- YAZI VE DİĞER FONKSİYONLAR ---
         textInput.value = "Merhaba! Soruyu birlikte adım adım çözelim.\n\nKütle çekim kuvveti formülümüz:\n$$ F = G \\cdot \\frac{M \\cdot m}{d^2} $$\n\n**1. Adım:** Verilenleri yerine yazalım...\n$$ F_K = G \\cdot \\frac{M \\cdot m_K}{4r^2} $$\n\n**Sonuç:** \nKütlelerin oranı: $$ \\frac{m_K}{m_L} = \\frac{4}{9} $$ olarak bulunur.";
 
-        // 2. Metni ve Formülleri İşleme Fonksiyonu
         function renderMathAndText() {
-            // Markdown'u HTML'e çevir
-            textOutput.innerHTML = marked.parse(textInput.value);
+            let text = textInput.value;
             
-            // MathJax ile formülleri oluştur (SVG olarak)
+            const mathBlocks = [];
+            const mathRegex = /(\$\$[\s\S]*?\$\$|\$[^$]*?\$|\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\\begin\{.*?\}[\s\S]*?\\end\{.*?\})/g;
+            
+            text = text.replace(mathRegex, function(match) {
+                mathBlocks.push(match);
+                return `__MATH_BLOCK_${mathBlocks.length - 1}__`;
+            });
+
+            let html = marked.parse(text);
+
+            mathBlocks.forEach((block, index) => {
+                html = html.replace(`__MATH_BLOCK_${index}__`, block);
+            });
+
+            textOutput.innerHTML = html;
+            
             if (window.MathJax && MathJax.typesetPromise) {
                 MathJax.typesetPromise([textOutput]).catch(function (err) {
                     console.error('MathJax hatası:', err.message);
@@ -167,23 +331,30 @@
             }
         }
 
-        // 3. Düzenle/Önizle Modu Değiştirici
         function toggleMode() {
             isPreviewMode = !isPreviewMode;
             if(isPreviewMode) {
                 renderMathAndText();
                 textInput.classList.add('hidden');
+                hintBox.classList.add('hidden');
                 textOutput.classList.remove('hidden');
-                btnToggle.innerHTML = "<span>✏️</span> Düzenlemeye Dön";
+                btnToggle.innerHTML = "<span>✏️</span> Düzenle";
             } else {
                 textOutput.classList.add('hidden');
                 textInput.classList.remove('hidden');
-                btnToggle.innerHTML = "<span>👁️</span> Görünümü Test Et";
+                hintBox.classList.remove('hidden');
+                btnToggle.innerHTML = "<span>👁️</span> Önizle";
             }
         }
         btnToggle.addEventListener('click', toggleMode);
 
-        // 4. PANODAN RESİM YAPIŞTIRMA (Ctrl+V) YAKALAYICI
+        // Görsel Yükleme Yönetimi
+        function handleImageLoaded(dataUrl) {
+            questionImage.src = dataUrl;
+            imageViewport.classList.remove('hidden');
+            uploadContainer.style.display = 'none';
+        }
+
         document.addEventListener('paste', function(e) {
             const clipboardData = e.clipboardData || window.clipboardData;
             if (!clipboardData) return;
@@ -196,25 +367,18 @@
                     imageFound = true;
                     const blob = items[i].getAsFile();
                     const reader = new FileReader();
-                    reader.onload = function(event) {
-                        questionImage.src = event.target.result;
-                        questionImage.classList.remove('hidden');
-                        uploadContainer.style.display = 'none';
-                    };
+                    reader.onload = (event) => handleImageLoaded(event.target.result);
                     reader.readAsDataURL(blob);
                     break;
                 }
             }
-            
             if(imageFound && document.activeElement === textInput) {
                 e.preventDefault(); 
             }
         });
 
-        // 4.5. TABLETLER İÇİN BUTONLA PANODAN YAPIŞTIRMA
         btnPasteTouch.addEventListener('click', async function() {
             try {
-                // Tarayıcı pano izni isteyecektir
                 if (!navigator.clipboard || !navigator.clipboard.read) {
                     throw new Error("Pano API desteklenmiyor.");
                 }
@@ -227,11 +391,7 @@
                         imageFound = true;
                         const blob = await clipboardItem.getType(imageType);
                         const reader = new FileReader();
-                        reader.onload = function(event) {
-                            questionImage.src = event.target.result;
-                            questionImage.classList.remove('hidden');
-                            uploadContainer.style.display = 'none';
-                        };
+                        reader.onload = (event) => handleImageLoaded(event.target.result);
                         reader.readAsDataURL(blob);
                         break;
                     }
@@ -247,19 +407,15 @@
             }
         });
 
-        // 4.6. SÜRÜKLE BIRAK (Drag & Drop) DESTEĞİ
         const rightPanel = uploadContainer.parentElement;
-        
         rightPanel.addEventListener('dragover', function(e) {
             e.preventDefault();
             uploadContainer.classList.add('border-indigo-500', 'bg-indigo-50');
         });
-        
         rightPanel.addEventListener('dragleave', function(e) {
             e.preventDefault();
             uploadContainer.classList.remove('border-indigo-500', 'bg-indigo-50');
         });
-        
         rightPanel.addEventListener('drop', function(e) {
             e.preventDefault();
             uploadContainer.classList.remove('border-indigo-500', 'bg-indigo-50');
@@ -268,36 +424,26 @@
                 const file = e.dataTransfer.files[0];
                 if (file.type.indexOf('image/') !== -1) {
                     const reader = new FileReader();
-                    reader.onload = function(event) {
-                        questionImage.src = event.target.result;
-                        questionImage.classList.remove('hidden');
-                        uploadContainer.style.display = 'none';
-                    };
+                    reader.onload = (event) => handleImageLoaded(event.target.result);
                     reader.readAsDataURL(file);
                 }
             }
         });
 
-        // 5. Manuel Resim Seçimi (Tıklayarak)
         imageUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
-                    questionImage.src = event.target.result;
-                    questionImage.classList.remove('hidden');
-                    uploadContainer.style.display = 'none';
-                };
+                reader.onload = (event) => handleImageLoaded(event.target.result);
                 reader.readAsDataURL(file);
             }
         });
 
-        // 6. GÖRÜNTÜYÜ KAYDETME (html2canvas)
         document.getElementById('btn-capture').addEventListener('click', function() {
-            // Eğer düzenleme modundaysa, ekran görüntüsü almadan önce arka planda metni formatla
             if (!isPreviewMode) {
                 renderMathAndText();
                 textInput.classList.add('hidden');
+                hintBox.classList.add('hidden');
                 textOutput.classList.remove('hidden');
             }
 
@@ -308,33 +454,30 @@
 
             const captureArea = document.getElementById('capture-area');
             const originalShadow = captureArea.style.boxShadow;
-            captureArea.style.boxShadow = 'none'; // Kenar gölgesi resimde kötü durmasın diye geçici kapatıyoruz
+            captureArea.style.boxShadow = 'none';
             captureArea.classList.remove('border', 'border-gray-200');
 
-            // MathJax'in render işlemini tamamlaması için çok kısa bir süre bekliyoruz
             setTimeout(() => {
                 html2canvas(captureArea, {
-                    scale: 2, // 2x yüksek çözünürlük
+                    scale: 2, 
                     backgroundColor: "#f1f5f9",
                     useCORS: true,
                     logging: false
                 }).then(canvas => {
-                    // Görüntüyü İndir
                     const link = document.createElement('a');
                     link.download = 'soru_cozumu.jpg';
                     link.href = canvas.toDataURL('image/jpeg', 0.95);
                     link.click();
                 }).finally(() => {
-                    // İşlem bitince her şeyi eski haline getir
                     btnText.innerText = originalText;
                     this.classList.remove('opacity-75', 'cursor-wait');
                     captureArea.style.boxShadow = originalShadow;
                     captureArea.classList.add('border', 'border-gray-200');
                     
-                    // Eğer butona basmadan önce düzenleme modundaysa, tekrar düzenleme moduna döndür
                     if (!isPreviewMode) {
                         textOutput.classList.add('hidden');
                         textInput.classList.remove('hidden');
+                        hintBox.classList.remove('hidden');
                     }
                 });
             }, 300);
